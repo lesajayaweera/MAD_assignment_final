@@ -116,7 +116,7 @@ class Home extends StatelessWidget {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
             icon: Icon(Icons.car_rental),
-            label: 'Products',
+            label: 'Car Listing',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_3_rounded),
