@@ -103,18 +103,9 @@ class Home extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 250, // Set height for horizontal list
-                    child: ListView.builder(
-                      itemCount: 5,
-                      scrollDirection: Axis.horizontal,
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
-                      itemBuilder: (context, index) {
-                        return carContainer();
-                      },
-                    ),
-                  ),
-                ],
+                 
+
+              ],
               ),
             ),
           ],
@@ -129,7 +120,7 @@ class Home extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_3_rounded),
-            label: 'Products',
+            label: 'Account',
           ),
         ],
       ),

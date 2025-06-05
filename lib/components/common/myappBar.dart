@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/screens/Notifications.dart';
 
 class myAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -28,11 +29,14 @@ class myAppbar extends StatelessWidget implements PreferredSizeWidget {
             IconButton(
               icon: const Icon(Icons.notifications),
               onPressed: () {
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => Notifications(),
+                ));
                 // Handle notifications
               },
             ),
             Positioned(
-              top: 15,
+              top: 10,
               right: 11,
               child: Container(
                 width: 13,
