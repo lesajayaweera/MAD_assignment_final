@@ -32,12 +32,85 @@ class Login extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: TextField(
+                
                 decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.alternate_email_rounded),
                   labelText: 'Email',
                   border: OutlineInputBorder(),
                 ),
               ),
+              
             ),
+            SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: TextField(
+
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.lock),
+                  labelText: 'Password',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+
+            ),
+
+            SizedBox(height: 20),
+            TextButton(
+              onPressed: () {
+                // Handle forgot password action
+              },
+              child: Text(
+                'Forgot Password?',
+                style: TextStyle(fontSize: 16, fontFamily: 'poppins', color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: SizedBox(
+                width: double.infinity,
+                child: TextButton(
+                  
+                  
+                  onPressed: () {
+                    // Handle login action
+                  },
+                  style: TextButton.styleFrom(
+                    
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white, // Button color
+                    minimumSize: Size(200, 50), // Set button width and height
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10), // Rounded corners
+                    ),
+                  ),
+                  child: Text('Login', style: TextStyle(fontSize: 20,fontFamily: 'poppins')),
+
+                  
+                ),
+                
+              ),
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Don\'t have an account? ',
+                  style: TextStyle(fontSize: 16, fontFamily: 'poppins'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    // Handle sign up action
+                  },
+                  child: Text(
+                    'Sign Up',
+                    style: TextStyle(fontSize: 16, fontFamily: 'poppins', color: Colors.blue),
+                  ),
+                ),
+              ],
+            ),
+            
           ],
         ),
       ),
