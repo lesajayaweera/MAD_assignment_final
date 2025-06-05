@@ -75,6 +75,7 @@ class Home extends StatelessWidget {
             ),
             Container(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -102,7 +103,17 @@ class Home extends StatelessWidget {
                       ),
                     ],
                   ),
-                  carContainer(),
+                  SizedBox(
+                    height: 250, // Set height for horizontal list
+                    child: ListView.builder(
+                      itemCount: 5,
+                      scrollDirection: Axis.horizontal,
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      itemBuilder: (context, index) {
+                        return carContainer();
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),
