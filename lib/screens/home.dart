@@ -103,9 +103,18 @@ class Home extends StatelessWidget {
                       ),
                     ],
                   ),
-                 
-
-              ],
+                  SizedBox(
+                    height: 250, // Set height for horizontal list
+                    child: ListView.builder(
+                      itemCount: 10,
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      itemBuilder: (context, index) {
+                        return const ProductContainer();
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
