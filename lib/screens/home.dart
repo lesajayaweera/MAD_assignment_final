@@ -14,6 +14,7 @@ class Home extends StatelessWidget {
       drawer: myDrawer(),
       body: SingleChildScrollView(
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             // search bar section
             Container(
@@ -85,6 +86,50 @@ class Home extends StatelessWidget {
                         child: Text(
                           textAlign: TextAlign.start,
                           'Latest Cars',
+                          style: TextStyle(
+                            fontFamily: 'poppins',
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 15.0),
+                        child: TextButton(
+                          onPressed: () {
+                            // Handle view all action
+                          },
+                          child: Text('View All'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 250, // Set height for horizontal list
+                    child: ListView.builder(
+                      itemCount: 10,
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      itemBuilder: (context, index) {
+                        return const ProductContainer();
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15.0),
+                        child: Text(
+                          textAlign: TextAlign.start,
+                          'Popular Cars',
                           style: TextStyle(
                             fontFamily: 'poppins',
                             fontSize: 20,
