@@ -17,8 +17,7 @@ class _LoginState extends State<Login> {
   void Login() {
     if (_formKey.currentState!.validate()) {
       // Valid form
-      print("Email: ${emailController.text}");
-      print("Password: ${passwordController.text}");
+
     }
   }
 
@@ -70,8 +69,14 @@ class _LoginState extends State<Login> {
                             border: OutlineInputBorder(),
                           ),
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null || value.isEmpty ) {
                               return 'Please enter your email';
+                            }
+                            else if (!value.contains('@')) {
+                              return 'Please enter a valid email';
+                            }
+                            else if (value.length < 6){
+                              return 'email is too short';
                             }
                             return null;
                           },
