@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class featuredItem extends StatelessWidget {
-  const featuredItem({super.key});
+  const featuredItem({super.key,required this.imageUrl,required this.text});
+  // Constructor to accept the image URL
+  final String imageUrl;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -12,17 +15,17 @@ class featuredItem extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: Image.asset(
-              'asset/image/car.jpg',
+              imageUrl,
               fit: BoxFit.cover,
-              width: 250,
-              height: 150,
+              width: 300,
+              height: 200,
             ),
           ),
           Positioned(
             bottom: 20,
             left: 20,
             child: Text(
-              'Welcome to LuxCars',
+              text,
               style: TextStyle(
                 fontFamily: 'poppins',
                 fontSize: 15,

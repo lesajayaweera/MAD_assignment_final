@@ -14,7 +14,7 @@ class ProductContainer extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(8.0),
             child: Image.asset(
-              'asset/image/car2.jpg',
+              'asset/image/car6.png',
               fit: BoxFit.cover,
               height: 150,
               width: 250,

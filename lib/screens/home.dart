@@ -5,8 +5,16 @@ import 'package:my_app/components/pages/Home/featuredItem.dart';
 import 'package:my_app/components/pages/Home/product_container.dart';
 
 class Home extends StatelessWidget {
-  const Home({super.key});
+   Home({super.key});
 
+  final List<Map<String, String>> featuredImages = [
+    {'image': 'asset/image/car.jpg','text' :"Introducing the Porche 911 Spider"},
+    {'image': 'asset/image/car2.jpg','text' :"Introducing the BMW M3 CS"},
+    {'image': 'asset/image/car3.jpg','text' :"Introducing the Porche 911 Spider"},
+    {'image': 'asset/image/car4.jpg','text' :"Introducing the Porche 911 Spider"},
+    {'image': 'asset/image/car5.jpg','text' :"Introducing the Porche 911 Spider"},
+  ];
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,17 +72,22 @@ class Home extends StatelessWidget {
                   SizedBox(
                     height: 170, // Set height for horizontal list
                     child: ListView.builder(
-                      itemCount: 5,
+                      itemCount: featuredImages.length,
+                      physics: BouncingScrollPhysics(),
                       scrollDirection: Axis.horizontal,
                       padding: EdgeInsets.symmetric(horizontal: 16.0),
                       itemBuilder: (context, index) {
-                        return featuredItem();
+                        return featuredItem(
+                          imageUrl: featuredImages[index]['image'] ?? '',
+                          text: featuredImages[index]['text'] ?? '',
+                        );
                       },
                     ),
                   ),
                 ],
               ),
             ),
+            SizedBox(height: 20,),
             Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
