@@ -1,20 +1,58 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:my_app/components/common/myappBar.dart';
 import 'package:my_app/components/common/mydrawer.dart';
 import 'package:my_app/components/pages/Home/featuredItem.dart';
 import 'package:my_app/components/pages/Home/product_container.dart';
 
-class Home extends StatelessWidget {
+
+
+
+class Home extends StatefulWidget {
    Home({super.key});
 
-  final List<Map<String, String>> featuredImages = [
-    {'image': 'asset/image/car.jpg','text' :"Introducing the Porche 911 Spider"},
-    {'image': 'asset/image/car2.jpg','text' :"Introducing the BMW M3 CS"},
-    {'image': 'asset/image/car3.jpg','text' :"Introducing the Porche 911 Spider"},
-    {'image': 'asset/image/car4.jpg','text' :"Introducing the Porche 911 Spider"},
-    {'image': 'asset/image/car5.jpg','text' :"Introducing the Porche 911 Spider"},
-  ];
   
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+
+  final ScrollController _scrollController = ScrollController();
+  late final Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(Duration(seconds: featuredImages.length + 1), (timer) {
+      if (_scrollController.hasClients) {
+        double nextPosition = _scrollController.offset + 300;
+        if (nextPosition >= _scrollController.position.maxScrollExtent) {
+          _scrollController.animateTo(0, duration: Duration(seconds: 1), curve: Curves.easeInOut);
+        } else {
+          _scrollController.animateTo(nextPosition, duration: Duration(seconds: 1), curve: Curves.easeInOut);
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  final List<Map<String, dynamic>> featuredImages = [
+    {'image': 'asset/image/car.jpg','text' :"Porche 911 Spider", 'isNew': true},
+    {'image': 'asset/image/car2.jpg','text' :"BMW M3 CS", 'isNew': false},
+    {'image': 'asset/image/car3.jpg','text' :"Chevelot Corvette Z06", 'isNew': true},
+    {'image': 'asset/image/car4.jpg','text' :"Mercedes-Benz S-Class", 'isNew': false},
+    {'image': 'asset/image/car5.jpg','text' :"BMW M4 Cs", 'isNew': true},
+    {'image': 'asset/image/car6.jpg','text' :"Dodge Challenger", 'isNew': false},
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,12 +112,14 @@ class Home extends StatelessWidget {
                     child: ListView.builder(
                       itemCount: featuredImages.length,
                       physics: BouncingScrollPhysics(),
+                      controller: _scrollController,
                       scrollDirection: Axis.horizontal,
                       padding: EdgeInsets.symmetric(horizontal: 16.0),
                       itemBuilder: (context, index) {
                         return featuredItem(
                           imageUrl: featuredImages[index]['image'] ?? '',
                           text: featuredImages[index]['text'] ?? '',
+                          isNew: featuredImages[index]['isNew'] ?? false,
                         );
                       },
                     ),
