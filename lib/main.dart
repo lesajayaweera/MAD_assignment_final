@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       title: 'LuxCars',
       theme: ThemeData(primarySwatch: Colors.blue),
       debugShowCheckedModeBanner: false,
-      home: Home(),
+      home: Login(),
     );
   }
 }
