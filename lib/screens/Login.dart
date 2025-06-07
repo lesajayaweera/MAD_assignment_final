@@ -86,19 +86,19 @@ class _LoginState extends State<Login> {
                               labelText: 'Email',
                               border: OutlineInputBorder(),
                             ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your email';
-                              } else if (!value.contains('@')) {
-                                return 'Please enter a valid email';
-                              } else if (value.length < 6) {
-                                return 'Email is too short';
-                              }
-                              return null;
-                            },
-                            onChanged: (value) {
-                              _formKey.currentState?.validate();
-                            },
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your email';
+                                } else if (!value.contains('@')) {
+                                  return 'Please enter a valid email';
+                                } else if (value.length < 6) {
+                                  return 'Email is too short';
+                                }
+                                return null;
+                              },
+                              onChanged: (value) {
+                                _formKey.currentState?.validate();
+                              },
                           ),
                         ),
                         const SizedBox(height: 20),

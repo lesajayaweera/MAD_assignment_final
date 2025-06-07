@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/screens/Login.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -8,6 +9,35 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final phoneController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  var isOpen = false;
+
+  //  fake method to register the user
+  void Register() {
+    if (_formKey.currentState!.validate()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Registration was Successful!'),
+          backgroundColor: Colors.greenAccent,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Invalid email or password'),
+          backgroundColor: Colors.redAccent,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,66 +73,111 @@ class _RegisterState extends State<Register> {
                   ),
                 ),
                 SizedBox(height: 40),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.person),
-                      labelText: 'Name',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.alternate_email_rounded),
-                      labelText: 'Email',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.phone),
-                      labelText: 'Phone Number',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: TextField(
-                    obscureText: true,
 
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.lock),
-                      labelText: 'Password',
-                      border: OutlineInputBorder(),
-                    ),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: TextFormField(
+                          onChanged: (value) {
+                            _formKey.currentState?.validate();
+                          },
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.person),
+                            labelText: 'Name',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your name';
+                            } else if (value.length < 6) {
+                              return 'Name is too short';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.alternate_email_rounded),
+                            labelText: 'Email',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your email';
+                            } else if (!value.contains('@')) {
+                              return 'Please enter a valid email';
+                            } else if (value.length < 6) {
+                              return 'Email is too short';
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {
+                            _formKey.currentState?.validate();
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.phone),
+                            labelText: 'Phone Number',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: TextFormField(
+                          obscureText: isOpen,
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.lock),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  isOpen = !isOpen;
+                                });
+                              },
+                              icon: Icon(
+                                isOpen
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                            ),
+                            labelText: 'Password',
+                            border: OutlineInputBorder(),
+                          ),
+                          onChanged: (value) {
+                            // Optional: Live validation
+                            _formKey.currentState?.validate();
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your password';
+                            } else if (value.length < 6) {
+                              return 'Password must be at least 6 characters';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+
+                      SizedBox(height: 20),
+                    ],
                   ),
                 ),
 
-                SizedBox(height: 20),
-                TextButton(
-                  onPressed: () {
-                    // Handle forgot password action
-                  },
-                  child: Text(
-                    'Forgot Password?',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'poppins',
-                      color: Colors.black87,
-                    ),
-                  ),
-                ),
+                
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: SizedBox(
@@ -135,15 +210,15 @@ class _RegisterState extends State<Register> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Don\'t have an account? ',
+                      'Have an account? ',
                       style: TextStyle(fontSize: 16, fontFamily: 'poppins'),
                     ),
                     TextButton(
                       onPressed: () {
-                        // Handle sign up action
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Login()));
                       },
                       child: Text(
-                        'Sign Up',
+                        'Login',
                         style: TextStyle(
                           fontSize: 16,
                           fontFamily: 'poppins',
