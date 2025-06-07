@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/screens/Register.dart';
 import 'package:my_app/screens/home.dart';
 
 class Login extends StatefulWidget {
@@ -188,7 +189,7 @@ class _LoginState extends State<Login> {
                             ),
                             TextButton(
                               onPressed: () {
-                                // Navigate to signup
+                                Navigator.push(context,MaterialPageRoute(builder: (context)=>Register()));
                               },
                               child: const Text(
                                 'Sign Up',
