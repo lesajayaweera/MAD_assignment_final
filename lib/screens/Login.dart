@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/screens/home.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -14,10 +15,26 @@ class _LoginState extends State<Login> {
 
   bool isOpen = true;
 
-  void Login() {
+  void login() {
     if (_formKey.currentState!.validate()) {
-      // Valid form
+      // Valid form, proceed with login
+      // Example: Navigator.push or API call
+      final String email = "lesanduluthmeen@gmail.com";
+      final String password ="lesandu123";
 
+      if (emailController.text == email && passwordController.text == password ){
+        Navigator.push(context,MaterialPageRoute(builder: (context)=>Home()) );
+      }
+      else{
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Invalid email or password'),
+            backgroundColor: Colors.redAccent,
+            behavior: SnackBarBehavior.floating,
+          ),
+
+        );
+      }
     }
   }
 
@@ -28,8 +45,6 @@ class _LoginState extends State<Login> {
         child: SingleChildScrollView(
           child: Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 40),
                 const CircleAvatar(
@@ -69,16 +84,17 @@ class _LoginState extends State<Login> {
                             border: OutlineInputBorder(),
                           ),
                           validator: (value) {
-                            if (value == null || value.isEmpty ) {
+                            if (value == null || value.isEmpty) {
                               return 'Please enter your email';
-                            }
-                            else if (!value.contains('@')) {
+                            } else if (!value.contains('@')) {
                               return 'Please enter a valid email';
-                            }
-                            else if (value.length < 6){
-                              return 'email is too short';
+                            } else if (value.length < 6) {
+                              return 'Email is too short';
                             }
                             return null;
+                          },
+                          onChanged: (value) {
+                            _formKey.currentState?.validate();
                           },
                         ),
                       ),
@@ -105,75 +121,86 @@ class _LoginState extends State<Login> {
                             labelText: 'Password',
                             border: const OutlineInputBorder(),
                           ),
+                          onChanged: (value) {
+                            // Optional: Live validation
+                            _formKey.currentState?.validate();
+                          },
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your password';
+                            } else if (value.length < 6) {
+                              return 'Password must be at least 6 characters';
                             }
                             return null;
                           },
                         ),
                       ),
+                      const SizedBox(height: 20),
+                      TextButton(
+                        onPressed: () {
+                          // Handle forgot password
+                        },
+                        child: const Text(
+                          'Forgot Password?',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontFamily: 'poppins',
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: TextButton(
+                            onPressed: login,
+                            style: TextButton.styleFrom(
+                              backgroundColor: Colors.black,
+                              foregroundColor: Colors.white,
+                              minimumSize: const Size(200, 50),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: const Text(
+                              'Login',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontFamily: 'poppins',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'Don\'t have an account? ',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontFamily: 'poppins',
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              // Navigate to signup
+                            },
+                            child: const Text(
+                              'Sign Up',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontFamily: 'poppins',
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
-                ),
-
-                const SizedBox(height: 20),
-                TextButton(
-                  onPressed: () {
-                    // Handle forgot password action
-                  },
-                  child: const Text(
-                    'Forgot Password?',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'poppins',
-                      color: Colors.black87,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: TextButton(
-                      onPressed: Login,
-                      style: TextButton.styleFrom(
-                        backgroundColor: Colors.black,
-                        foregroundColor: Colors.white,
-                        minimumSize: const Size(200, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: const Text(
-                        'Login',
-                        style: TextStyle(fontSize: 20, fontFamily: 'poppins'),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Don\'t have an account? ',
-                      style: TextStyle(fontSize: 16, fontFamily: 'poppins'),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        // Handle sign up action
-                      },
-                      child: const Text(
-                        'Sign Up',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontFamily: 'poppins',
-                          color: Colors.blue,
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),
