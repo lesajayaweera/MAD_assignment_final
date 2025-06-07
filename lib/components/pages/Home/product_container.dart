@@ -11,11 +11,14 @@ class ProductContainer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Product Image
-          Image.asset(
-            'asset/image/car.jpg',
-            fit: BoxFit.cover,
-            height: 150,
-            width: 300,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8.0),
+            child: Image.asset(
+              'asset/image/car2.jpg',
+              fit: BoxFit.cover,
+              height: 150,
+              width: 250,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),

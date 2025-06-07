@@ -13,6 +13,7 @@ class Home extends StatelessWidget {
       appBar: myAppbar(title: 'LuxCars'),
       drawer: myDrawer(),
       body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -109,6 +110,7 @@ class Home extends StatelessWidget {
                     child: ListView.builder(
                       itemCount: 10,
                       scrollDirection: Axis.horizontal,
+                      physics: BouncingScrollPhysics(),
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       itemBuilder: (context, index) {
                         return const ProductContainer();
@@ -118,6 +120,7 @@ class Home extends StatelessWidget {
                 ],
               ),
             ),
+            SizedBox(height: 20), // Add some space between sections
             Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
