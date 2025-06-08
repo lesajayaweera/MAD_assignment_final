@@ -15,31 +15,31 @@ class _ProductDetailsState extends State<ProductDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: myAppbar(title: 'Vehicle Name'),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-
-        child: Column(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-
-              child: Image.asset(
-                'asset/image/car.jpg',
-                width: double.infinity,
-                height: 300,
-                fit: BoxFit.cover,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+        
+          child: Column(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+        
+                child: Image.asset(
+                  'asset/image/car.jpg',
+                  width: double.infinity,
+                  height: 300,
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            SingleChildScrollView(
-              child: Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-
+              
                 children: [
                   SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
-
+              
                     children: [
                       Column(
                         mainAxisSize: MainAxisSize.min,
@@ -81,11 +81,84 @@ class _ProductDetailsState extends State<ProductDetails> {
                     'vsjnkwemv;lmevw;lmwe;lmwelmevwlmvwe;lmvw;lmvw;lmvw;lmw;vlm;lvm;wlmv;lmwv;lm;lwvm;lmwlmvwempwlm[wmmvsjnkwemv;lmevw;lmwe;lmwelmevwlmvwe;lmvw;lmvw;lmvw;lmw;vlm;lvm;wlmv;lmwv;lm;lwvm;lmwlmvwempwlm[wmmvsjnkwemv;lmevw;lmwe;lmwelmevwlmvwe;lmvw;lmvw;lmvw;lmw;vlm;lvm;wlmv;lmwv;lm;lwvm;lmwlmvwempwlm[wmmvsjnkwemv;lmevw;lmwe;lmwelmevwlmvwe;lmvw;lmvw;lmvw;lmw;vlm;lvm;wlmv;lmwv;lm;lwvm;lmwlmvwempwlm[wmmvsjnkwemv;lmevw;lmwe;lmwelmevwlmvwe;lmvw;lmvw;lmvw;lmw;vlm;lvm;wlmv;lmwv;lm;lwvm;lmwlmvwempwlm[wmm',
                     style: TextStyle(fontFamily: 'poppins'),
                   ),
-
+                  SizedBox(height: 16),
+                  Text(
+                    'Features',
+                    style: TextStyle(
+                      fontFamily: 'poppins',
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Engine',
+                            style: TextStyle(fontFamily: 'poppins'),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            '2.0L Turbo',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Transmission',
+                            style: TextStyle(fontFamily: 'poppins'),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            'Automatic',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Fuel Type',
+                            style: TextStyle(fontFamily: 'poppins'),
+                          ),
+                          SizedBox(height: 4),
+                          Text('Petrol', style: TextStyle(color: Colors.grey)),
+                        ],
+                      ),
+                    ],
+                  ),
+              
+                  SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: Text('Add to Cart'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,           // Button color
+                                    foregroundColor: Colors.white,           // Text/icon color
+                                    padding: const EdgeInsets.symmetric(     // Padding inside button
+                                      vertical: 16,
+                                      horizontal: 24,
+                                    ),
+                                    shape: RoundedRectangleBorder(           // Rounded corners
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
