@@ -75,7 +75,7 @@ class ProductsPage extends StatelessWidget {
                     crossAxisCount: crossAxisCount,
                     mainAxisSpacing: 1,
                     crossAxisSpacing: 1,
-                    childAspectRatio:1.2, // Adjust as needed
+                    childAspectRatio:1.3, // Adjust as needed
                   ),
                   itemBuilder: (context, index) {
                     return  ProductContainer();
