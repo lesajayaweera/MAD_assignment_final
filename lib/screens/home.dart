@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:my_app/components/common/myappBar.dart';
-import 'package:my_app/components/common/mydrawer.dart';
+
 import 'package:my_app/components/pages/Home/featuredItem.dart';
 import 'package:my_app/components/pages/Home/product_container.dart';
 
+import 'package:my_app/Data/items.dart';
 
 
 
@@ -158,12 +158,13 @@ class _HomeState extends State<Home> {
                   SizedBox(
                     height: 280, // Set height for horizontal list
                     child: ListView.builder(
-                      itemCount: 10,
+                      itemCount:products.length ,
                       scrollDirection: Axis.horizontal,
                       physics: BouncingScrollPhysics(),
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       itemBuilder: (context, index) {
-                        return const ProductContainer();
+                        final item = products[index];
+                        return ProductContainer(product: item);
                       },
                     ),
                   ),
@@ -204,11 +205,12 @@ class _HomeState extends State<Home> {
                   SizedBox(
                     height: 300, // Set height for horizontal list
                     child: ListView.builder(
-                      itemCount: 10,
+                      itemCount: products.length,
                       scrollDirection: Axis.horizontal,
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       itemBuilder: (context, index) {
-                        return const ProductContainer();
+                        final items = products[index];
+                        return ProductContainer(product: items,);
                       },
                     ),
                   ),

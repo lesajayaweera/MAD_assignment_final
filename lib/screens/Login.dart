@@ -3,7 +3,8 @@ import 'package:my_app/screens/Register.dart';
 import 'package:my_app/screens/home.dart';
 
 class Login extends StatefulWidget {
-  const Login({super.key});
+  final VoidCallback login;
+   Login({super.key,required this.login});
 
   @override
   State<Login> createState() => _LoginState();
@@ -18,13 +19,12 @@ class _LoginState extends State<Login> {
   // method to the login the user 
   void login() {
     if (_formKey.currentState!.validate()) {
-      // Valid form, proceed with login
-      // Example: Navigator.push or API call
+
       final String email = "lesanduluthmeen@gmail.com";
       final String password ="lesandu123";
 
       if (emailController.text == email && passwordController.text == password ){
-        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>Home()) );
+        widget.login();
       }
       else{
         ScaffoldMessenger.of(context).showSnackBar(

@@ -3,6 +3,7 @@ import 'package:my_app/components/common/myappBar.dart';
 import 'package:my_app/components/common/mydrawer.dart';
 import 'package:my_app/screens/CarListing.dart';
 import 'package:my_app/screens/Cart.dart';
+import 'package:my_app/screens/Login.dart';
 import 'package:my_app/screens/Notifications.dart';
 import 'package:my_app/screens/home.dart';
 
@@ -19,6 +20,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int selected = 0;
+  bool _isLogin = false;
+
+  void _login() {
+    setState(() {
+      _isLogin = true;
+    });
+  }
 
   final List<Widget> _pages = [Home(), ProductsPage(), Notifications(), Cart()];
 
@@ -41,38 +49,43 @@ class _MyAppState extends State<MyApp> {
       title: 'LuxCars',
       theme: ThemeData(primarySwatch: Colors.blue),
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: myAppbar(title: _titles[selected]),
-        drawer: myDrawer(
-          onItemTap: (index) {
-            setState(() {
-              selected = index;
-            });
-          },
-        ),
+      home: _isLogin
+          ? Scaffold(
+              appBar: myAppbar(title: _titles[selected]),
+              drawer: myDrawer(
+                onItemTap: (index) {
+                  setState(() {
+                    selected = index;
+                  });
+                },
+              ),
 
-        body: _pages[selected],
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: selected,
-          onTap: _onTapped,
-          type: BottomNavigationBarType.fixed,
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.car_rental),
-              label: 'Car Listing',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.notifications),
-              label: 'Notifications',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart),
-              label: 'My Cart',
-            ),
-          ],
-        ),
-      ),
+              body: _pages[selected],
+              bottomNavigationBar: BottomNavigationBar(
+                currentIndex: selected,
+                onTap: _onTapped,
+                type: BottomNavigationBarType.fixed,
+                items: const [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.home),
+                    label: 'Home',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.car_rental),
+                    label: 'Car Listing',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.notifications),
+                    label: 'Notifications',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.shopping_cart),
+                    label: 'My Cart',
+                  ),
+                ],
+              ),
+            )
+          : Login(login: _login),
     );
   }
 }

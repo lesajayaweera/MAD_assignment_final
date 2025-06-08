@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/Data/items.dart';
 
 class ProductContainer extends StatelessWidget {
-  const ProductContainer({super.key});
+  final Products product;
+
+  const ProductContainer({
+    super.key,
+    required this.product,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,27 +20,26 @@ class ProductContainer extends StatelessWidget {
 
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,  // lets card size itself to content
+          mainAxisSize: MainAxisSize.min,
           children: [
-            // Image section
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
+              ),
               child: Image.asset(
-                'asset/image/car.jpg',
+                product.imageUrl,
                 height: 120,
                 width: 150,
                 fit: BoxFit.cover,
               ),
             ),
-
-            // Padding around details
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'BMW M3 CS',
+                    product.name,
                     style: const TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 18,
@@ -43,7 +48,7 @@ class ProductContainer extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Brand Name',
+                    product.model,
                     style: const TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 14,
@@ -53,7 +58,7 @@ class ProductContainer extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '\$98,000',
+                    '\$${product.price.toString()}',
                     style: TextStyle(
                       fontSize: 16,
                       fontFamily: 'Poppins',
@@ -62,7 +67,6 @@ class ProductContainer extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 12),
-
                 ],
               ),
             ),

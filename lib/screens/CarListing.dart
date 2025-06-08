@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/components/common/myappBar.dart';
-import 'package:my_app/components/common/mydrawer.dart';
+import 'package:my_app/Data/items.dart';
+
 import 'package:my_app/components/pages/CarListing/LogoButton.dart';
 import 'package:my_app/components/pages/Home/product_container.dart';
 
@@ -52,7 +52,7 @@ class ProductsPage extends StatelessWidget {
                 int crossAxisCount = (constraints.maxWidth ~/ 300).clamp(1, 4);
 
                 return GridView.builder(
-                  itemCount:10, // Replace with actual product count
+                  itemCount:products.length, // Replace with actual product count
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: crossAxisCount,
@@ -61,7 +61,8 @@ class ProductsPage extends StatelessWidget {
                     childAspectRatio:1.3, // Adjust as needed
                   ),
                   itemBuilder: (context, index) {
-                    return  ProductContainer();
+                    final item = products[index];
+                    return  ProductContainer(product: item,);
                   },
                 );
               },

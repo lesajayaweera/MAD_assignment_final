@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/main.dart';
 import 'package:my_app/screens/Login.dart';
 
 class Register extends StatefulWidget {
@@ -215,7 +216,7 @@ class _RegisterState extends State<Register> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Login()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>MyApp()));
                       },
                       child: Text(
                         'Login',

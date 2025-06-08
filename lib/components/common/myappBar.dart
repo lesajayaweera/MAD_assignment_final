@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/main.dart';
 import 'package:my_app/screens/Login.dart';
-import 'package:my_app/screens/Notifications.dart';
+
 
 class myAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -26,7 +27,7 @@ class myAppbar extends StatelessWidget implements PreferredSizeWidget {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => Login()),
+              MaterialPageRoute(builder: (context) => MyApp()),
             );
           },
           icon: Icon(Icons.logout_rounded),
