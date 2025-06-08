@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/Data/cart.dart';
 import 'package:my_app/Data/items.dart';
+import 'package:my_app/Essentials/functions.dart';
 
 class CartItem extends StatefulWidget {
   const CartItem({super.key, required this.product, required this.remove});
@@ -52,7 +53,7 @@ class _CartItemState extends State<CartItem> {
                   ),
                   SizedBox(height: 8.0),
                   Text(
-                    '\$${widget.product.price}', // Add dollar sign
+                    formatPrice(widget.product.price), // Add dollar sign
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16.0,

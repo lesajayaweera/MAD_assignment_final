@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/Data/items.dart';
+import 'package:my_app/Essentials/functions.dart';
 import 'package:my_app/screens/ProductsDetail.dart';
 
 class ProductContainer extends StatelessWidget {
@@ -60,7 +61,7 @@ class ProductContainer extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      '\$${product.price.toString()}',
+                      formatPrice(product.price),
                       style: TextStyle(
                         fontSize: 16,
                         fontFamily: 'Poppins',

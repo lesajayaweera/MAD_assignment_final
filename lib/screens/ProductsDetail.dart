@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/Data/items.dart';
+import 'package:my_app/Essentials/functions.dart';
 import 'package:my_app/components/common/myappBar.dart';
 import 'package:my_app/Data/cart.dart';
 
@@ -55,7 +56,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                             ),
                           ),
                           Text(
-                            "\$${widget.product.price}",
+                            formatPrice(widget.product.price),
                             style: TextStyle(fontSize: 20, color: Colors.grey),
                           ),
                         ],
@@ -151,7 +152,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                             SnackBar(
                               content: Text(
                                 '${widget.product.name} added to cart!',
+
                               ),
+                              duration: Duration(seconds: 2),
                             ),
                           );
                         } else {
