@@ -6,6 +6,7 @@ import 'package:my_app/components/pages/Home/featuredItem.dart';
 import 'package:my_app/components/pages/Home/product_container.dart';
 
 import 'package:my_app/Data/items.dart';
+import 'package:my_app/screens/CarListing.dart';
 
 class Home extends StatefulWidget {
   Home({super.key});
@@ -126,7 +127,7 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 SizedBox(
-                  height: 170, // Set height for horizontal list
+                  height: 170, 
                   child: ListView.builder(
                     itemCount: products.length,
                     physics: BouncingScrollPhysics(),
@@ -162,15 +163,7 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 15.0),
-                      child: TextButton(
-                        onPressed: () {
-                          // Handle view all action
-                        },
-                        child: Text('View All'),
-                      ),
-                    ),
+                    
                   ],
                 ),
                 SizedBox(
@@ -209,15 +202,7 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 15.0),
-                      child: TextButton(
-                        onPressed: () {
-                          // Handle view all action
-                        },
-                        child: Text('View All'),
-                      ),
-                    ),
+                    
                   ],
                 ),
                 SizedBox(
