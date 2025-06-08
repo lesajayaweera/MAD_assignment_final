@@ -55,10 +55,7 @@ class _HomeState extends State<Home> {
   ];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: myAppbar(title: 'LuxCars',isNotificationEnabled: false,),
-      drawer: myDrawer(),
-      body: SingleChildScrollView(
+    return SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -220,23 +217,6 @@ class _HomeState extends State<Home> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.car_rental),
-            label: 'Car Listing',
-
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notifications',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart),label: 'My Cart')
-        ],
-      ),
-    );
+      );
   }
 }

@@ -16,24 +16,7 @@ class ProductsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: myAppbar(title: 'Car Listings'),
-      drawer: myDrawer(),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.car_rental),
-            label: 'Car Listing',
-
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_3_rounded),
-            label: 'Account',
-          ),
-        ],
-      ),
-      body: Column(
+    return Column(
         children: [
           const SizedBox(height: 10),
 
@@ -85,7 +68,6 @@ class ProductsPage extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
+      );
   }
 }

@@ -78,9 +78,7 @@ class Notifications extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: myAppbar(title:'Notifications',isNotificationEnabled: false,),
-      body: ListView.builder(
+    return ListView.builder(
         itemCount: notifications.length,
         itemBuilder: (context, index) {
           final item = notifications[index];
@@ -119,7 +117,6 @@ class Notifications extends StatelessWidget {
             ),
           );
         },
-      ),
-    );
+      );
   }
 }

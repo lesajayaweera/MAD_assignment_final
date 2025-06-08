@@ -12,9 +12,7 @@ class Cart extends StatefulWidget {
 class _CartState extends State<Cart> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: myAppbar(title: 'My Cart'),
-      body: Column(
+    return Column(
         children: [
           Expanded(
             child: ListView.builder(
@@ -27,8 +25,7 @@ class _CartState extends State<Cart> {
           _paymentContainer()
           
         ],
-      ),
-    );
+      );
   }
 }
 
