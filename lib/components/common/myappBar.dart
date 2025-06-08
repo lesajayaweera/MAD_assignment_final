@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/screens/Login.dart';
 import 'package:my_app/screens/Notifications.dart';
 
 class myAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool isNotificationEnabled;
 
-  // Constructor to allow passing a title, if needed
-  // If not needed, you can remove the title parameter
-  // and use a fixed title in the AppBar.
-  const myAppbar({Key? key, required this.title, this.isNotificationEnabled = true}) : super(key: key);
+  const myAppbar({
+    Key? key,
+    required this.title,
+    this.isNotificationEnabled = true,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,10 +33,12 @@ class myAppbar extends StatelessWidget implements PreferredSizeWidget {
                   IconButton(
                     icon: const Icon(Icons.notifications),
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => Notifications(),
-                      ));
-                      // Handle notifications
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Notifications(),
+                        ),
+                      );
                     },
                   ),
                   Positioned(
@@ -60,8 +64,27 @@ class myAppbar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ],
               ),
+              IconButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => Login()),
+                  );
+                },
+                icon: Icon(Icons.logout_rounded),
+              ),
             ]
-          : [],
+          : [
+              IconButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => Login()),
+                  );
+                },
+                icon: Icon(Icons.logout_rounded),
+              ),
+            ],
     );
   }
 
