@@ -14,27 +14,35 @@ class ProductsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          int crossAxisCount = (constraints.maxWidth ~/ 300).clamp(1, 4);
+    final orientation = MediaQuery.of(context).orientation;
 
-          return GridView.builder(
-            itemCount: products.length,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: crossAxisCount,
-              mainAxisSpacing: 1,
-              crossAxisSpacing: 1,
-              childAspectRatio: 1.3, // Adjust as needed
-            ),
-            itemBuilder: (context, index) {
-              final item = products[index];
-              return ProductContainer(product: item);
-            },
-          );
-        },
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double screenWidth = constraints.maxWidth;
+
+        
+        int crossAxisCount = orientation == Orientation.landscape
+            ? (screenWidth ~/ 250).clamp(2, 6)
+            : (screenWidth ~/ 300).clamp(1, 4);
+
+        
+        double aspectRatio = orientation == Orientation.landscape ? 1 : 1.3;
+
+        return GridView.builder(
+          itemCount: products.length,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            mainAxisSpacing: 16,
+            crossAxisSpacing: 16,
+            childAspectRatio: aspectRatio,
+          ),
+          itemBuilder: (context, index) {
+            final item = products[index];
+            return ProductContainer(product: item);
+          },
+        );
+      },
     );
   }
 }
