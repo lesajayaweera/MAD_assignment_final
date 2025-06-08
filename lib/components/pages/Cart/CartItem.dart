@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/Data/cart.dart';
+import 'package:my_app/Data/items.dart';
 
-class CartItem extends StatelessWidget {
-  // final String name;
-  // final String image;
-  // final int price;
-  // final int quaniity;
-  int item = 1;
-  // required this.name, required this.image, required this.price, required this.quaniity
-  CartItem({super.key});
+class CartItem extends StatefulWidget {
+  const CartItem({super.key, required this.product, required this.remove});
+  final Products product;
+  final VoidCallback remove;
 
+  @override
+  State<CartItem> createState() => _CartItemState();
+}
+
+class _CartItemState extends State<CartItem> {
   @override
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      elevation: 2.0, // Adds a subtle shadow
+      elevation: 2.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -23,7 +26,7 @@ class CartItem extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
               child: Image.asset(
-                'asset/image/car.jpg',
+                widget.product.imageUrl,
                 width: 80,
                 height: 80,
                 fit: BoxFit.cover,
@@ -36,7 +39,7 @@ class CartItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'title',
+                    widget.product.name,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16.0,
@@ -44,12 +47,12 @@ class CartItem extends StatelessWidget {
                   ),
                   SizedBox(height: 2.0),
                   Text(
-                    'description',
+                    widget.product.model,
                     style: TextStyle(color: Colors.grey[600], fontSize: 14.0),
                   ),
                   SizedBox(height: 8.0),
                   Text(
-                    '\$50', // Add dollar sign
+                    '\$${widget.product.price}', // Add dollar sign
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16.0,
@@ -59,32 +62,10 @@ class CartItem extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(width: 16.0),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.remove_circle_outline),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Text(
-                    '15',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.add_circle_outline),
-                ),
-              ],
+            IconButton(
+              onPressed: widget.remove,
+              icon: Icon(Icons.delete_rounded, color: Colors.red),
             ),
-            SizedBox(width: 8.0),
-            Icon(Icons.more_vert, color: Colors.grey[600]),
           ],
         ),
       ),

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/Data/items.dart';
 import 'package:my_app/components/common/myappBar.dart';
+import 'package:my_app/Data/cart.dart';
 
 class ProductDetails extends StatefulWidget {
-  final int productId;
-
-  const ProductDetails({super.key, required this.productId});
+  const ProductDetails({super.key, required this.product});
+  final Products product;
 
   @override
   State<ProductDetails> createState() => _ProductDetailsState();
@@ -14,18 +15,18 @@ class _ProductDetailsState extends State<ProductDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppbar(title: 'Vehicle Name'),
+      appBar: myAppbar(title: widget.product.name),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-        
+
           child: Column(
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-        
+
                 child: Image.asset(
-                  'asset/image/car.jpg',
+                  widget.product.imageUrl,
                   width: double.infinity,
                   height: 300,
                   fit: BoxFit.cover,
@@ -33,28 +34,28 @@ class _ProductDetailsState extends State<ProductDetails> {
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-              
+
                 children: [
                   SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
-              
+
                     children: [
                       Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Vehicle Name',
+                            widget.product.name,
                             style: TextStyle(
                               fontFamily: 'poppins',
-                              fontSize: 28,
+                              fontSize: 24,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
-                            'Rs.1,800',
+                            "\$${widget.product.price}",
                             style: TextStyle(fontSize: 20, color: Colors.grey),
                           ),
                         ],
@@ -65,7 +66,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           Text(
                             '4/5',
                             style: TextStyle(
-                              fontSize: 25,
+                              fontSize: 21,
                               fontWeight: FontWeight.bold,
                               color: Colors.amberAccent.shade200,
                             ),
@@ -78,7 +79,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                   ),
                   SizedBox(height: 16),
                   Text(
-                    'vsjnkwemv;lmevw;lmwe;lmwelmevwlmvwe;lmvw;lmvw;lmvw;lmw;vlm;lvm;wlmv;lmwv;lm;lwvm;lmwlmvwempwlm[wmmvsjnkwemv;lmevw;lmwe;lmwelmevwlmvwe;lmvw;lmvw;lmvw;lmw;vlm;lvm;wlmv;lmwv;lm;lwvm;lmwlmvwempwlm[wmmvsjnkwemv;lmevw;lmwe;lmwelmevwlmvwe;lmvw;lmvw;lmvw;lmw;vlm;lvm;wlmv;lmwv;lm;lwvm;lmwlmvwempwlm[wmmvsjnkwemv;lmevw;lmwe;lmwelmevwlmvwe;lmvw;lmvw;lmvw;lmw;vlm;lvm;wlmv;lmwv;lm;lwvm;lmwlmvwempwlm[wmmvsjnkwemv;lmevw;lmwe;lmwelmevwlmvwe;lmvw;lmvw;lmvw;lmw;vlm;lvm;wlmv;lmwv;lm;lwvm;lmwlmvwempwlm[wmm',
+                    widget.product.description,
                     style: TextStyle(fontFamily: 'poppins'),
                   ),
                   SizedBox(height: 16),
@@ -103,8 +104,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                           ),
                           SizedBox(height: 4),
                           Text(
-                            '2.0L Turbo',
-                            style: TextStyle(color: Colors.grey),
+                            widget.product.engine,
+                            style: TextStyle(color: Colors.blueGrey),
                           ),
                         ],
                       ),
@@ -117,8 +118,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                           ),
                           SizedBox(height: 4),
                           Text(
-                            'Automatic',
-                            style: TextStyle(color: Colors.grey),
+                            widget.product.transmission,
+                            style: TextStyle(color: Colors.blueGrey),
                           ),
                         ],
                       ),
@@ -130,28 +131,52 @@ class _ProductDetailsState extends State<ProductDetails> {
                             style: TextStyle(fontFamily: 'poppins'),
                           ),
                           SizedBox(height: 4),
-                          Text('Petrol', style: TextStyle(color: Colors.grey)),
+                          Text(
+                            widget.product.fuelType,
+                            style: TextStyle(color: Colors.blueGrey),
+                          ),
                         ],
                       ),
                     ],
                   ),
-              
+
                   SizedBox(height: 16),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        if (!cart.contains(widget.product)) {
+                          AddtoCart(widget.product);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                '${widget.product.name} added to cart!',
+                              ),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                '${widget.product.name} is already in the cart!',
+                              ),
+                            ),
+                          );
+                        }
+                      },
                       child: Text('Add to Cart'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,           // Button color
-                                    foregroundColor: Colors.white,           // Text/icon color
-                                    padding: const EdgeInsets.symmetric(     // Padding inside button
-                                      vertical: 16,
-                                      horizontal: 24,
-                                    ),
-                                    shape: RoundedRectangleBorder(           // Rounded corners
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
+                        backgroundColor: Colors.black,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          // Padding inside button
+                          vertical: 16,
+                          horizontal: 24,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          // Rounded corners
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                     ),
                   ),
