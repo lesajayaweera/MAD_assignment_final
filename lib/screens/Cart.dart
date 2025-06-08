@@ -96,7 +96,7 @@ class _CartState extends State<Cart> {
           SizedBox(height: 16),
           Container(
             decoration: BoxDecoration(
-              color: Colors.grey[100],
+              
               borderRadius: BorderRadius.circular(12.0),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
@@ -131,7 +131,7 @@ class _CartState extends State<Cart> {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  
                 ),
               ),
               Text(
@@ -139,7 +139,7 @@ class _CartState extends State<Cart> {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  
                 ),
               ),
             ],
@@ -149,8 +149,7 @@ class _CartState extends State<Cart> {
             child: ElevatedButton(
               onPressed: _handlePayment,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                foregroundColor: Colors.white,
+                
                 minimumSize: Size(double.infinity, 55),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -181,7 +180,7 @@ class _CartState extends State<Cart> {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
-              color: Colors.black,
+              
             ),
           ),
         ],

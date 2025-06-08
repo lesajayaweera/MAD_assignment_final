@@ -148,7 +148,7 @@ class _LoginState extends State<Login> {
                             style: TextStyle(
                               fontSize: 16,
                               fontFamily: 'poppins',
-                              color: Colors.black87,
+                              
                             ),
                           ),
                         ),
@@ -156,11 +156,10 @@ class _LoginState extends State<Login> {
                           padding: const EdgeInsets.all(20.0),
                           child: SizedBox(
                             width: double.infinity,
-                            child: TextButton(
+                            child: ElevatedButton(
                               onPressed: login,
-                              style: TextButton.styleFrom(
-                                backgroundColor: Colors.black,
-                                foregroundColor: Colors.white,
+                              style: ElevatedButton.styleFrom(
+                                
                                 minimumSize: const Size(200, 50),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),

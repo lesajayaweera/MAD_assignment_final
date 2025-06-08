@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/Essentials/themeData.dart';
 import 'package:my_app/components/common/myappBar.dart';
 import 'package:my_app/components/common/mydrawer.dart';
 import 'package:my_app/screens/CarListing.dart';
@@ -45,9 +46,12 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       title: 'LuxCars',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: customLightTheme,
+      darkTheme: customDarkTheme,
+      themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       home: _isLogin
           ? Scaffold(

@@ -169,8 +169,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                       },
                       child: Text('Add to Cart'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
-                        foregroundColor: Colors.white,
+                        
                         padding: const EdgeInsets.symmetric(
                           // Padding inside button
                           vertical: 16,

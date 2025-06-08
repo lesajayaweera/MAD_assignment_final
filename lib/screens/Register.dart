@@ -183,13 +183,12 @@ class _RegisterState extends State<Register> {
                   padding: const EdgeInsets.all(20.0),
                   child: SizedBox(
                     width: double.infinity,
-                    child: TextButton(
+                    child: ElevatedButton(
                       onPressed: () {
                         // Handle login action
                       },
-                      style: TextButton.styleFrom(
-                        backgroundColor: Colors.black,
-                        foregroundColor: Colors.white,
+                      style: ElevatedButton.styleFrom(
+                        
                         // Button color
                         minimumSize: Size(200, 50),
                         // Set button width and height

@@ -11,14 +11,14 @@ class myAppbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.transparent,
+      
       title: Text(
         title,
         style: TextStyle(
           fontFamily: 'poppins',
           fontSize: 24,
           fontWeight: FontWeight.w800,
-          color: Colors.black,
+          
         ),
       ),
       centerTitle: true,
