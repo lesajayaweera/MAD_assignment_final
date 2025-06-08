@@ -32,8 +32,8 @@ final ThemeData customDarkTheme = ThemeData(
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       textStyle: TextStyle(fontFamily: 'poppins'),
-      backgroundColor: Colors.white,          // Button background in dark mode
-      foregroundColor: Colors.black,          // Button text/icon color
+      backgroundColor: Colors.white,         
+      foregroundColor: Colors.black,         
       padding: EdgeInsets.symmetric(vertical: 16),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),

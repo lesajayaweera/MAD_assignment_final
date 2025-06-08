@@ -5,6 +5,7 @@ class EmptyCart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Orientation view = MediaQuery.of(context).orientation;
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -13,8 +14,7 @@ class EmptyCart extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             child: Image.asset(
               'asset/image/emptyCart.png',
-              width: double.infinity,
-
+              width: view == Orientation.landscape ? 300 : double.infinity,
               fit: BoxFit.cover,
             ),
           ),

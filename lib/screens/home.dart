@@ -6,7 +6,7 @@ import 'package:my_app/components/pages/Home/featuredItem.dart';
 import 'package:my_app/components/pages/Home/product_container.dart';
 
 import 'package:my_app/Data/items.dart';
-import 'package:my_app/screens/CarListing.dart';
+
 
 class Home extends StatefulWidget {
   Home({super.key});

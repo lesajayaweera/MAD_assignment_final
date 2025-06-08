@@ -15,6 +15,7 @@ class ProductDetails extends StatefulWidget {
 class _ProductDetailsState extends State<ProductDetails> {
   @override
   Widget build(BuildContext context) {
+    Orientation view = MediaQuery.of(context).orientation;
     return Scaffold(
       appBar: myAppbar(title: widget.product.name),
       body: SingleChildScrollView(
@@ -28,7 +29,7 @@ class _ProductDetailsState extends State<ProductDetails> {
 
                 child: Image.asset(
                   widget.product.imageUrl,
-                  width: double.infinity,
+                  width: view == Orientation.landscape ? 400 :300,
                   height: 300,
                   fit: BoxFit.cover,
                 ),

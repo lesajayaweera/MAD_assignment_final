@@ -55,49 +55,71 @@ class _CartState extends State<Cart> {
     if (cart.isEmpty) {
       return EmptyCart();
     } else {
-      return Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: cart.length,
-              itemBuilder: (_, index) {
-                final product = cart[index];
-                return CartItem(
-                  product: product,
-                  remove: () {
-                    setState(() {
-                      RemoveProduct(product);
-                    });
-                  },
-                );
-              },
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          final screenHeight = MediaQuery.of(context).size.height;
+          final screenWidth = MediaQuery.of(context).size.width;
+          final isWide = screenWidth > 600;
+
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: screenHeight * 0.6,
+                    child: ListView.builder(
+                      itemCount: cart.length,
+                      itemBuilder: (_, index) {
+                        final product = cart[index];
+                        return CartItem(
+                          product: product,
+                          remove: () {
+                            setState(() {
+                              RemoveProduct(product);
+                            });
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  _paymentContainer(isWide),
+                ],
+              ),
             ),
-          ),
-          _paymentContainer(),
-        ],
+          );
+        },
       );
     }
   }
 
-  Widget _paymentContainer() {
+  Widget _paymentContainer(bool isWide) {
     return Container(
+      width: double.infinity,
       margin: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        
+        borderRadius: BorderRadius.circular(12.0),
+        
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Shipping Information',
             style: TextStyle(
-              fontSize: 20,
+              fontSize: isWide ? 24 : 20,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+             
             ),
           ),
           SizedBox(height: 16),
           Container(
             decoration: BoxDecoration(
-              
               borderRadius: BorderRadius.circular(12.0),
+              
             ),
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
             child: Row(
@@ -129,17 +151,15 @@ class _CartState extends State<Cart> {
               Text(
                 'Sub Total',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: isWide ? 20 : 18,
                   fontWeight: FontWeight.bold,
-                  
                 ),
               ),
               Text(
                 formatPrice(GetTotal()),
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: isWide ? 20 : 18,
                   fontWeight: FontWeight.bold,
-                  
                 ),
               ),
             ],
@@ -149,7 +169,6 @@ class _CartState extends State<Cart> {
             child: ElevatedButton(
               onPressed: _handlePayment,
               style: ElevatedButton.styleFrom(
-                
                 minimumSize: Size(double.infinity, 55),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -158,7 +177,10 @@ class _CartState extends State<Cart> {
               ),
               child: Text(
                 'Pay',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  fontSize: isWide ? 20 : 18,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -180,7 +202,6 @@ class _CartState extends State<Cart> {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
-              
             ),
           ),
         ],
