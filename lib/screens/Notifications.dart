@@ -1,63 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/Data/notifications.dart';
 
-
 //  Notification samples
-  // final List<NotificationItem> notifications = [
-  //   NotificationItem(
-  //     title: 'Order Successful!',
-  //     subtitle: 'Your order #234 was placed successfully.',
-  //     icon: Icons.check_circle,
-  //     iconColor: Colors.green,
-  //     date: '2023-10-01',
-  //     isRead: false, // Default value for read status
-  //   ),
-  //   NotificationItem(
-  //     title: 'New Message',
-  //     subtitle: 'You have a new message from John.',
-  //     icon: Icons.message,
-  //     iconColor: Colors.blue,
-  //     date: '2023-10-02',
-  //     isRead: false, // Default value for read status
-  //   ),
-  //   NotificationItem(
-  //     title: 'Delivery Update',
-  //     subtitle: 'Your package will arrive tomorrow.',
-  //     icon: Icons.local_shipping,
-  //     iconColor: Colors.orange,
-  //     date: '2023-10-03',
-  //     isRead: false, // Default value for read status
-  //   ),
-  //   NotificationItem(
-  //     title: 'Payment Received',
-  //     subtitle: 'We have received your payment.',
-  //     icon: Icons.payment,
-  //     iconColor: Colors.purple,
-  //     date: '2023-10-04',
-  //     isRead: true, // Default value for read status
-  //   ),
-  //   NotificationItem(
-  //     title: 'Payment Unsuccessful',
-  //     subtitle: 'Your payment was not successful.',
-  //     icon: Icons.error,
-  //     iconColor: Colors.red.shade400,
-  //     date: '2023-10-05',
-  //     isRead: true, // Default value for read status
-  //   ),
-  //   NotificationItem(
-  //     title: 'New Feature Available',
-  //     subtitle: 'Check out the new features in the app.',
-  //     icon: Icons.new_releases,
-  //     iconColor: Colors.teal,
-  //     date: '2023-10-06',
-  //     isRead: true, // Default value for read status
-  //   ),
-  // ];
-
-
-
-
-
+// final List<NotificationItem> notifications = [
+//   NotificationItem(
+//     title: 'Order Successful!',
+//     subtitle: 'Your order #234 was placed successfully.',
+//     icon: Icons.check_circle,
+//     iconColor: Colors.green,
+//     date: '2023-10-01',
+//     isRead: false, // Default value for read status
+//   ),
+//   NotificationItem(
+//     title: 'New Message',
+//     subtitle: 'You have a new message from John.',
+//     icon: Icons.message,
+//     iconColor: Colors.blue,
+//     date: '2023-10-02',
+//     isRead: false, // Default value for read status
+//   ),
+//   NotificationItem(
+//     title: 'Delivery Update',
+//     subtitle: 'Your package will arrive tomorrow.',
+//     icon: Icons.local_shipping,
+//     iconColor: Colors.orange,
+//     date: '2023-10-03',
+//     isRead: false, // Default value for read status
+//   ),
+//   NotificationItem(
+//     title: 'Payment Received',
+//     subtitle: 'We have received your payment.',
+//     icon: Icons.payment,
+//     iconColor: Colors.purple,
+//     date: '2023-10-04',
+//     isRead: true, // Default value for read status
+//   ),
+//   NotificationItem(
+//     title: 'Payment Unsuccessful',
+//     subtitle: 'Your payment was not successful.',
+//     icon: Icons.error,
+//     iconColor: Colors.red.shade400,
+//     date: '2023-10-05',
+//     isRead: true, // Default value for read status
+//   ),
+//   NotificationItem(
+//     title: 'New Feature Available',
+//     subtitle: 'Check out the new features in the app.',
+//     icon: Icons.new_releases,
+//     iconColor: Colors.teal,
+//     date: '2023-10-06',
+//     isRead: true, // Default value for read status
+//   ),
+// ];
 
 class Notifications extends StatefulWidget {
   const Notifications({super.key});
@@ -69,14 +63,17 @@ class Notifications extends StatefulWidget {
 class _NotificationsState extends State<Notifications> {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    if (notifications.isEmpty) {
+      return Center(child: Text('No New Notifications',style: TextStyle(fontFamily: 'poppins',color: Colors.blueGrey),));
+    } else {
+      return ListView.builder(
         itemCount: notifications.length,
         itemBuilder: (context, index) {
           final item = notifications[index];
           return Container(
-              color: item.isRead ? Colors.transparent : Colors.black12,
-              margin: EdgeInsets.only(top: 5,left: 5,right: 5),
-              padding: EdgeInsets.all(10),
+            color: item.isRead ? Colors.transparent : Colors.black12,
+            margin: EdgeInsets.only(top: 5, left: 5, right: 5),
+            padding: EdgeInsets.all(10),
             child: ListTile(
               leading: Container(
                 decoration: BoxDecoration(
@@ -109,5 +106,6 @@ class _NotificationsState extends State<Notifications> {
           );
         },
       );
+    }
   }
 }
