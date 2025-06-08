@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/screens/Cart.dart';
+import 'package:my_app/screens/home.dart';
+import 'package:my_app/screens/myAccount.dart';
+
+import '../../screens/CarListing.dart';
 
 class myDrawer extends StatelessWidget {
   const myDrawer({super.key});
@@ -29,20 +34,21 @@ class myDrawer extends StatelessWidget {
               leading: const Icon(Icons.home),
               title: const Text('Home'),
               onTap: () {
-                // Handle home navigation
+                Navigator.push(context,MaterialPageRoute(builder: (context)=>Home()) );
               },
             ),
             ListTile(
               leading: const Icon(Icons.inventory),
               title: const Text('Car Listing'),
               onTap: () {
-                // Handle settings navigation
+                Navigator.push(context,MaterialPageRoute(builder: (context)=>ProductsPage()) );
               },
             ),
             ListTile(
               leading: const Icon(Icons.shopping_cart),
               title: const Text('Cart'),
               onTap: () {
+                Navigator.push(context,MaterialPageRoute(builder: (context)=>Cart()) );
                 // Handle about navigation
               },
             ),
@@ -51,7 +57,12 @@ class myDrawer extends StatelessWidget {
               title: const Text('My Account'),
               onTap: () {
                 // Handle about navigation
+                Navigator.push(context,MaterialPageRoute(builder: (context)=>MyAccount()) );
               },
+            ),
+            ListTile(
+              leading: const Icon(Icons.notifications),
+              title: const Text('Notifications'),
             ),
           ],
         ),

@@ -16,14 +16,17 @@ class Logobutton extends StatelessWidget {
           )
       ),
       onPressed: () {},
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(image, width: 60, height: 60),
-          Text(name, style: TextStyle(fontFamily: 'poppins', fontSize: 16,fontWeight: FontWeight.w700)),
-        ],
+      child: Container(
+        height: 100,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(image, width: 60, height: 60),
+            Text(name, style: TextStyle(fontFamily: 'poppins', fontSize: 16,fontWeight: FontWeight.w700)),
+          ],
 
+        ),
       ),
 
     );

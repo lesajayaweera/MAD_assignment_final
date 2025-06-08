@@ -159,7 +159,7 @@ class _HomeState extends State<Home> {
                     ],
                   ),
                   SizedBox(
-                    height: 250, // Set height for horizontal list
+                    height: 280, // Set height for horizontal list
                     child: ListView.builder(
                       itemCount: 10,
                       scrollDirection: Axis.horizontal,
@@ -205,7 +205,7 @@ class _HomeState extends State<Home> {
                     ],
                   ),
                   SizedBox(
-                    height: 250, // Set height for horizontal list
+                    height: 300, // Set height for horizontal list
                     child: ListView.builder(
                       itemCount: 10,
                       scrollDirection: Axis.horizontal,
@@ -227,6 +227,7 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(
             icon: Icon(Icons.car_rental),
             label: 'Car Listing',
+
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_3_rounded),

@@ -19,18 +19,33 @@ class ProductsPage extends StatelessWidget {
     return Scaffold(
       appBar: myAppbar(title: 'Car Listings'),
       drawer: myDrawer(),
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.car_rental),
+            label: 'Car Listing',
+
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_3_rounded),
+            label: 'Account',
+          ),
+        ],
+      ),
       body: Column(
         children: [
           const SizedBox(height: 10),
 
+          // Brand logos list
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            margin: EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            margin: const EdgeInsets.symmetric(horizontal: 20),
             height: 100,
             width: double.infinity,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               itemCount: brands.length,
               itemBuilder: (context, index) {
                 return Padding(
@@ -46,20 +61,25 @@ class ProductsPage extends StatelessWidget {
 
           const SizedBox(height: 15),
 
+          // Responsive Grid with LayoutBuilder
           Expanded(
-            child: GridView.builder(
-              itemCount: 6, // Change this based on your actual product list
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 1, // 2 items per row
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                childAspectRatio: 3 / 2,
-              ),
-              itemBuilder: (context, index) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [ProductContainer()],
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                // Responsive column count based on width
+                int crossAxisCount = (constraints.maxWidth ~/ 300).clamp(1, 4);
+
+                return GridView.builder(
+                  itemCount:10, // Replace with actual product count
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    mainAxisSpacing: 1,
+                    crossAxisSpacing: 1,
+                    childAspectRatio:1.2, // Adjust as needed
+                  ),
+                  itemBuilder: (context, index) {
+                    return  ProductContainer();
+                  },
                 );
               },
             ),
