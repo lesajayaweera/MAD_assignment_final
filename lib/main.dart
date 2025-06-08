@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_app/components/common/myappBar.dart';
 import 'package:my_app/components/common/mydrawer.dart';
 import 'package:my_app/screens/CarListing.dart';
+import 'package:my_app/screens/Cart.dart';
 import 'package:my_app/screens/Login.dart';
 import 'package:my_app/screens/ProductsDetail.dart';
 import 'package:my_app/screens/Register.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
       title: 'LuxCars',
       theme: ThemeData(primarySwatch: Colors.blue),
       debugShowCheckedModeBanner: false,
-      home: ProductDetails(productId: 2,),
+      home: Home(),
     );
   }
 }

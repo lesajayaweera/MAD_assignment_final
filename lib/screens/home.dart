@@ -222,6 +222,7 @@ class _HomeState extends State<Home> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
@@ -233,6 +234,7 @@ class _HomeState extends State<Home> {
             icon: Icon(Icons.person_3_rounded),
             label: 'Account',
           ),
+          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart),label: 'My Cart')
         ],
       ),
     );
