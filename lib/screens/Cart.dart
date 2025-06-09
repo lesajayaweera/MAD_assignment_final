@@ -67,7 +67,7 @@ class _CartState extends State<Cart> {
               child: Column(
                 children: [
                   SizedBox(
-                    height: screenHeight * 0.6,
+                    height: screenHeight * 0.4,
                     child: ListView.builder(
                       itemCount: cart.length,
                       itemBuilder: (_, index) {
@@ -82,9 +82,11 @@ class _CartState extends State<Cart> {
                         );
                       },
                     ),
+                   
                   ),
-                  SizedBox(height: 16),
+                   SizedBox(height: 16),
                   _paymentContainer(isWide),
+                  
                 ],
               ),
             ),
