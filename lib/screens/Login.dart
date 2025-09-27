@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/Classes/authService.dart';
 import 'package:my_app/screens/Register.dart';
-
 
 class Login extends StatefulWidget {
   final VoidCallback login;
-   Login({super.key,required this.login});
+  Login({super.key, required this.login});
 
   @override
   State<Login> createState() => _LoginState();
@@ -16,25 +16,49 @@ class _LoginState extends State<Login> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   bool isOpen = true;
-  // method to the login the user 
-  void login() {
+
+  bool isLoading = false;
+  // method to the login the user
+  Future<void> login() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true; // Start loading
+      });
 
-      final String email = "lesanduluthmeen@gmail.com";
-      final String password ="lesandu123";
+      try {
+        // Call AuthService with user inputs
+        final response = await AuthService.login(
+          emailController.text,
+          passwordController.text,
+        );
 
-      if (emailController.text == email && passwordController.text == password ){
-        widget.login();
-      }
-      else{
+        // Check if token is present (success)
+        if (response['token'] != null) {
+          widget
+              .login(); // Call the callback to proceed (e.g., navigate to home)
+        } else {
+          // Handle unexpected response
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Login failed: Invalid response from server'),
+              backgroundColor: Colors.redAccent,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+      } catch (e) {
+        // Handle errors like network issues or invalid credentials
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Invalid email or password'),
+          SnackBar(
+            content: Text('Login failed: ${e.toString()}'),
             backgroundColor: Colors.redAccent,
             behavior: SnackBarBehavior.floating,
           ),
-
         );
+      } finally {
+        setState(() {
+          isLoading = false; // Stop loading
+        });
       }
     }
   }
@@ -86,19 +110,19 @@ class _LoginState extends State<Login> {
                               labelText: 'Email',
                               border: OutlineInputBorder(),
                             ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter your email';
-                                } else if (!value.contains('@')) {
-                                  return 'Please enter a valid email';
-                                } else if (value.length < 6) {
-                                  return 'Email is too short';
-                                }
-                                return null;
-                              },
-                              onChanged: (value) {
-                                _formKey.currentState?.validate();
-                              },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your email';
+                              } else if (!value.contains('@')) {
+                                return 'Please enter a valid email';
+                              } else if (value.length < 6) {
+                                return 'Email is too short';
+                              }
+                              return null;
+                            },
+                            onChanged: (value) {
+                              _formKey.currentState?.validate();
+                            },
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -148,7 +172,6 @@ class _LoginState extends State<Login> {
                             style: TextStyle(
                               fontSize: 16,
                               fontFamily: 'poppins',
-                              
                             ),
                           ),
                         ),
@@ -157,21 +180,29 @@ class _LoginState extends State<Login> {
                           child: SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: login,
+                              onPressed: isLoading
+                                  ? null
+                                  : login, // Disable if loading
                               style: ElevatedButton.styleFrom(
-                                
                                 minimumSize: const Size(200, 50),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                               ),
-                              child: const Text(
-                                'Login',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontFamily: 'poppins',
-                                ),
-                              ),
+                              child: isLoading
+                                  ? const CircularProgressIndicator(
+                                      // Show spinner
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white,
+                                      ),
+                                    )
+                                  : const Text(
+                                      'Login',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontFamily: 'poppins',
+                                      ),
+                                    ),
                             ),
                           ),
                         ),
@@ -188,7 +219,12 @@ class _LoginState extends State<Login> {
                             ),
                             TextButton(
                               onPressed: () {
-                                Navigator.push(context,MaterialPageRoute(builder: (context)=>Register()));
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Register(),
+                                  ),
+                                );
                               },
                               child: const Text(
                                 'Sign Up',

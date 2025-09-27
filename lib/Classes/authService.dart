@@ -45,6 +45,8 @@ class AuthService {
     // Save token after login
     if (data['token'] != null) {
       await ApiService.saveToken(data['token']);
+
+      print(  'Token saved: ${data['token']}');
     }
     
     return data;
