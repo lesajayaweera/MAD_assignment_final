@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/Classes/apiService.dart';
 import 'package:my_app/Essentials/themeData.dart';
 import 'package:my_app/components/common/myappBar.dart';
 import 'package:my_app/components/common/mydrawer.dart';
@@ -23,13 +24,29 @@ class _MyAppState extends State<MyApp> {
   int selected = 0;
   bool _isLogin = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus(); // Check if user is already logged in
+  }
+
+  // Check if a token exists to determine login status
+  void _checkLoginStatus() async {
+    final token = await ApiService.getToken();
+    if (token != null) {
+      setState(() {
+        _isLogin = true;
+      });
+    }
+  }
+
   void _login() {
     setState(() {
       _isLogin = true;
     });
   }
 
-  final List<Widget> _pages = [Home(), ProductsPage(), Notifications(), Cart()];
+  final List<Widget> _pages = [ Home(), ProductsPage(), Notifications(), Cart()];
 
   final List<String> _titles = [
     'Home',
@@ -46,7 +63,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       title: 'LuxCars',
       theme: customLightTheme,
@@ -63,7 +79,6 @@ class _MyAppState extends State<MyApp> {
                   });
                 },
               ),
-
               body: _pages[selected],
               bottomNavigationBar: BottomNavigationBar(
                 currentIndex: selected,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/Classes/authService.dart';
 import 'package:my_app/main.dart';
 
 
@@ -25,6 +26,9 @@ class myAppbar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           onPressed: () {
+
+            AuthService.logout();
+            
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => MyApp()),
