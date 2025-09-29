@@ -20,7 +20,7 @@ class _WebTestScreenState extends State<WebTestScreen> {
 
     try {
       final response = await http.get(
-        Uri.parse('https://ssp-final-assignment-production.up.railway.app//api/vehicles'),
+        Uri.parse('http://192.168.8.183:8000/api'),
         headers: {'Accept': 'application/json'},
       ).timeout(Duration(seconds: 10));
 
@@ -53,7 +53,7 @@ class _WebTestScreenState extends State<WebTestScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:8000/api/login'),
+        Uri.parse('http://192.168.8.183:8000/api/login'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'email': 'lesanduluthmeen@gmail.com', // Use your test user
