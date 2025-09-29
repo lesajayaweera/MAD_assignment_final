@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/Classes/authService.dart';
-import 'package:my_app/main.dart';
 
-
+import 'package:my_app/screens/authWrapper.dart';
 
 class myAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -12,27 +11,26 @@ class myAppbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      
       title: Text(
         title,
         style: TextStyle(
           fontFamily: 'poppins',
           fontSize: 24,
           fontWeight: FontWeight.w800,
-          
         ),
       ),
       centerTitle: true,
       actions: [
         IconButton(
-          onPressed: () {
-
-            AuthService.logout();
-            
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => MyApp()),
-            );
+          onPressed: () async {
+            await AuthService.logout();
+            if (context.mounted) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => const AuthWrapper()),
+                (route) => false,
+              );
+            }
           },
           icon: Icon(Icons.logout_rounded),
         ),
