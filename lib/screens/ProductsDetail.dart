@@ -170,7 +170,7 @@
 //                       },
 //                       child: Text('Add to Cart'),
 //                       style: ElevatedButton.styleFrom(
-                        
+
 //                         padding: const EdgeInsets.symmetric(
 //                           // Padding inside button
 //                           vertical: 16,
@@ -195,14 +195,19 @@
 
 import 'package:flutter/material.dart';
 import 'package:my_app/Classes/model/Vehicles.dart';
+import 'package:my_app/Classes/orderService.dart';
 import 'package:my_app/Essentials/functions.dart';
 import 'package:my_app/components/common/myappBar.dart';
 import 'package:my_app/Data/cart.dart';
 
 class ProductDetails extends StatefulWidget {
-  const ProductDetails({super.key, required this.product, this.relatedVehicles = const []});
+  const ProductDetails({
+    super.key,
+    required this.product,
+    
+  });
   final Vehicle product;
-  final List<Vehicle> relatedVehicles;
+ 
 
   @override
   State<ProductDetails> createState() => _ProductDetailsState();
@@ -223,18 +228,11 @@ class _ProductDetailsState extends State<ProductDetails> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.grey.shade200,
-          width: 1,
-        ),
+        border: Border.all(color: Colors.grey.shade200, width: 1),
       ),
       child: Column(
         children: [
-          Icon(
-            icon,
-            color: Colors.blue.shade600,
-            size: 28,
-          ),
+          Icon(icon, color: Colors.blue.shade600, size: 28),
           const SizedBox(height: 8),
           Text(
             label,
@@ -289,7 +287,9 @@ class _ProductDetailsState extends State<ProductDetails> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
+              ),
               child: Image.network(
                 vehicle.imageUrls.first,
                 height: 120,
@@ -364,7 +364,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(20),
                         child: SizedBox(
-                          width: view == Orientation.landscape ? 500 : double.infinity,
+                          width: view == Orientation.landscape
+                              ? 500
+                              : double.infinity,
                           height: 320,
                           child: PageView.builder(
                             controller: _pageController,
@@ -407,8 +409,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                               ],
                             ),
                             child: Icon(
-                              isFavorite ? Icons.favorite : Icons.favorite_border,
-                              color: isFavorite ? Colors.red : Colors.grey.shade700,
+                              isFavorite
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: isFavorite
+                                  ? Colors.red
+                                  : Colors.grey.shade700,
                               size: 24,
                             ),
                           ),
@@ -419,10 +425,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                         top: 12,
                         left: 12,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
                           decoration: BoxDecoration(
-                            color: widget.product.status == 'available' 
-                                ? Colors.green.shade600 
+                            color: widget.product.status == 'available'
+                                ? Colors.green.shade600
                                 : Colors.red.shade600,
                             borderRadius: BorderRadius.circular(20),
                           ),
@@ -514,7 +523,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                                         ),
                                         decoration: BoxDecoration(
                                           color: Colors.blue.shade50,
-                                          borderRadius: BorderRadius.circular(6),
+                                          borderRadius: BorderRadius.circular(
+                                            6,
+                                          ),
                                         ),
                                         child: Text(
                                           widget.product.year.toString(),
@@ -534,7 +545,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                                         ),
                                         decoration: BoxDecoration(
                                           color: Colors.orange.shade50,
-                                          borderRadius: BorderRadius.circular(6),
+                                          borderRadius: BorderRadius.circular(
+                                            6,
+                                          ),
                                         ),
                                         child: Text(
                                           widget.product.condition,
@@ -585,7 +598,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           ],
                         ),
                         const SizedBox(height: 16),
-                        
+
                         const SizedBox(height: 16),
                         // Price
                         Row(
@@ -605,7 +618,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  formatPrice(double.parse(widget.product.price)),
+                                  formatPrice(
+                                    double.parse(widget.product.price),
+                                  ),
                                   style: TextStyle(
                                     fontFamily: 'Poppins',
                                     fontSize: 28,
@@ -903,32 +918,32 @@ class _ProductDetailsState extends State<ProductDetails> {
 
                   const SizedBox(height: 24),
 
-                  // Related Vehicles
-                  if (widget.relatedVehicles.isNotEmpty) ...[
-                    const Text(
-                      'Similar Vehicles',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF1A1A1A),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    SizedBox(
-                      height: 220,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: widget.relatedVehicles.length,
-                        itemBuilder: (context, index) {
-                          return _buildRelatedVehicleCard(
-                            widget.relatedVehicles[index],
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                  ],
+                  // // Related Vehicles
+                  // if (widget.relatedVehicles.isNotEmpty) ...[
+                  //   const Text(
+                  //     'Similar Vehicles',
+                  //     style: TextStyle(
+                  //       fontFamily: 'Poppins',
+                  //       fontSize: 18,
+                  //       fontWeight: FontWeight.bold,
+                  //       color: Color(0xFF1A1A1A),
+                  //     ),
+                  //   ),
+                  //   const SizedBox(height: 12),
+                  //   SizedBox(
+                  //     height: 220,
+                  //     child: ListView.builder(
+                  //       scrollDirection: Axis.horizontal,
+                  //       itemCount: widget.relatedVehicles.length,
+                  //       itemBuilder: (context, index) {
+                  //         return _buildRelatedVehicleCard(
+                  //           widget.relatedVehicles[index],
+                  //         );
+                  //       },
+                  //     ),
+                  //   ),
+                  //   const SizedBox(height: 24),
+                  // ],
 
                   // Add to Cart Button
                   SizedBox(
@@ -937,6 +952,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                       onPressed: () {
                         if (!cart.contains(widget.product)) {
                           // AddtoCart(widget.product);
+                           OrderService.createOrder(widget.product.uuid);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Row(
@@ -1022,6 +1038,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                       ),
                     ),
                   ),
+
+                  
 
                   const SizedBox(height: 20),
                 ],

@@ -225,10 +225,6 @@
 //   }
 // }
 
-
-
-
-
 // import 'dart:async';
 
 // import 'package:flutter/material.dart';
@@ -684,7 +680,9 @@ class _HomeState extends State<Home> {
     try {
       final response = await VehicleService.getVehicles();
       setState(() {
-        _vehicles = response.map<Vehicle>((json) => Vehicle.fromJson(json)).toList();
+        _vehicles = response
+            .map<Vehicle>((json) => Vehicle.fromJson(json))
+            .toList();
         print(_vehicles);
         _isLoading = false;
       });
@@ -825,9 +823,7 @@ class _HomeState extends State<Home> {
       height: 300,
       margin: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Center(
-        child: CircularProgressIndicator(
-          color: Colors.blue.shade700,
-        ),
+        child: CircularProgressIndicator(color: Colors.blue.shade700),
       ),
     );
   }
@@ -917,84 +913,93 @@ class _HomeState extends State<Home> {
             _isLoading
                 ? _buildLoadingState()
                 : _vehicles.isEmpty
-                    ? _buildEmptyState()
-                    : Column(
-                        children: [
-                          // Featured Cars section
-                          _buildSectionHeader('Featured Cars'),
-                          SizedBox(
-                            height: 180,
-                            child: ListView.builder(
-                              itemCount: _vehicles.length,
-                              physics: const BouncingScrollPhysics(),
-                              controller: _scrollController,
-                              scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                              itemBuilder: (context, index) {
-                                final car = _vehicles[index];
-                                return Padding(
-                                  padding: const EdgeInsets.only(right: 16.0),
-                                  child: featuredItem(product: car),
-                                );
-                              },
-                            ),
+                ? _buildEmptyState()
+                : Column(
+                    children: [
+                      // Featured Cars section
+                      _buildSectionHeader('Featured Cars'),
+                      SizedBox(
+                        height: 180,
+                        child: ListView.builder(
+                          itemCount: _vehicles.length,
+                          physics: const BouncingScrollPhysics(),
+                          controller: _scrollController,
+                          scrollDirection: Axis.horizontal,
+                          padding: const EdgeInsets.only(
+                            left: 20.0,
+                            right: 20.0,
                           ),
-
-                          const SizedBox(height: 24),
-
-                          // Latest Cars section
-                          _buildSectionHeader(
-                            'Latest Cars',
-                            onSeeAll: () {
-                              // Handle see all action
-                            },
-                          ),
-                          SizedBox(
-                            height: 400,
-                            child: ListView.builder(
-                              itemCount: _vehicles.length,
-                              scrollDirection: Axis.horizontal,
-                              physics: const BouncingScrollPhysics(),
-                              padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                              itemBuilder: (context, index) {
-                                final item = _vehicles[index];
-                                return Padding(
-                                  padding: const EdgeInsets.only(right: 16.0),
-                                  child: ProductContainer(product: item),
-                                );
-                              },
-                            ),
-                          ),
-
-                          const SizedBox(height: 24),
-
-                          // Popular Cars section
-                          _buildSectionHeader(
-                            'Popular Cars',
-                            onSeeAll: () {
-                              // Handle see all action
-                            },
-                          ),
-                          SizedBox(
-                            height: 400,
-                            child: ListView.builder(
-                              itemCount: _vehicles.length,
-                              scrollDirection: Axis.horizontal,
-                              physics: const BouncingScrollPhysics(),
-                              padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                              itemBuilder: (context, index) {
-                                final items = _vehicles[index];
-                                return Padding(
-                                  padding: const EdgeInsets.only(right: 16.0),
-                                  child: ProductContainer(product: items),
-                                );
-                              },
-                            ),
-                          ),
-
-                          const SizedBox(height: 24),
-                        ],
+                          itemBuilder: (context, index) {
+                            final car = _vehicles[index];
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 16.0),
+                              child: featuredItem(product: car),
+                            );
+                          },
+                        ),
                       ),
+
+                      const SizedBox(height: 24),
+
+                      // Latest Cars section
+                      _buildSectionHeader(
+                        'Latest Cars',
+                        onSeeAll: () {
+                          // Handle see all action
+                        },
+                      ),
+                      SizedBox(
+                        height: 400,
+                        child: ListView.builder(
+                          itemCount: _vehicles.length,
+                          scrollDirection: Axis.horizontal,
+                          physics: const BouncingScrollPhysics(),
+                          padding: const EdgeInsets.only(
+                            left: 20.0,
+                            right: 20.0,
+                          ),
+                          itemBuilder: (context, index) {
+                            final item = _vehicles[index];
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 16.0),
+                              child: ProductContainer(product: item),
+                            );
+                          },
+                        ),
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // Popular Cars section
+                      _buildSectionHeader(
+                        'Popular Cars',
+                        onSeeAll: () {
+                          // Handle see all action
+                        },
+                      ),
+                      SizedBox(
+                        height: 400,
+                        child: ListView.builder(
+                          itemCount: _vehicles.length,
+                          scrollDirection: Axis.horizontal,
+                          physics: const BouncingScrollPhysics(),
+                          padding: const EdgeInsets.only(
+                            left: 20.0,
+                            right: 20.0,
+                          ),
+                          itemBuilder: (context, index) {
+                            final items = _vehicles[index];
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 16.0),
+                              child: ProductContainer(product: items),
+                            );
+                          },
+                        ),
+                      ),
+
+                      const SizedBox(height: 24),
+                    ],
+                  ),
           ],
         ),
       ),
