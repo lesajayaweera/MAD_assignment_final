@@ -19,13 +19,7 @@ class _ProductContainerState extends State<ProductContainer> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => ProductDetails(product: widget.product),
-        //   ),
-        // );
-        print("Loading image: ${widget.product.imageUrls[0]}");
+       Navigator.push(context, MaterialPageRoute(builder: (context)=> ProductDetails(product: widget.product) ));
       },
       child: MouseRegion(
         onEnter: (_) => setState(() => _isHovered = true),
@@ -227,16 +221,16 @@ class _ProductContainerState extends State<ProductContainer> {
                                   ),
                                 ),
                                 const SizedBox(height: 2),
-                                // Text(
-                                //   formatPrice(widget.product.price),
-                                //   style: TextStyle(
-                                //     fontSize: 20,
-                                //     fontFamily: 'Poppins',
-                                //     color: Colors.green.shade700,
-                                //     fontWeight: FontWeight.bold,
-                                //     letterSpacing: -0.5,
-                                //   ),
-                                // ),
+                                Text(
+                                  formatPrice(double.parse(widget.product.price)),
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontFamily: 'Poppins',
+                                    color: Colors.green.shade700,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: -0.5,
+                                  ),
+                                ),
                               ],
                             ),
 
@@ -263,14 +257,14 @@ class _ProductContainerState extends State<ProductContainer> {
                                 child: InkWell(
                                   borderRadius: BorderRadius.circular(12),
                                   onTap: () {
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) => ProductDetails(
-                                    //       product: widget.product,
-                                    //     ),
-                                    //   ),
-                                    // );
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ProductDetails(
+                                          product: widget.product,
+                                        ),
+                                      ),
+                                    );
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
