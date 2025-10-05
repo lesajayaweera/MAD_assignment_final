@@ -7,7 +7,6 @@
 
 // import 'package:my_app/Data/items.dart';
 
-
 // class Home extends StatefulWidget {
 //   Home({super.key});
 
@@ -127,7 +126,7 @@
 //                   ),
 //                 ),
 //                 SizedBox(
-//                   height: 170, 
+//                   height: 170,
 //                   child: ListView.builder(
 //                     itemCount: products.length,
 //                     physics: BouncingScrollPhysics(),
@@ -163,7 +162,7 @@
 //                         ),
 //                       ),
 //                     ),
-                    
+
 //                   ],
 //                 ),
 //                 SizedBox(
@@ -202,7 +201,7 @@
 //                         ),
 //                       ),
 //                     ),
-                    
+
 //                   ],
 //                 ),
 //                 SizedBox(
@@ -226,16 +225,16 @@
 //   }
 // }
 
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:my_app/Classes/model/Vehicles.dart';
+import 'package:my_app/Classes/vehicle_service.dart';
 
 import 'package:my_app/components/pages/Home/featuredItem.dart';
 import 'package:my_app/components/pages/Home/product_container.dart';
 
 import 'package:my_app/Data/items.dart';
-
 
 class Home extends StatefulWidget {
   Home({super.key});
@@ -248,9 +247,16 @@ class _HomeState extends State<Home> {
   final ScrollController _scrollController = ScrollController();
   late final Timer _timer;
 
+  List<Vehicle> _vehicles = [];
+  bool _isLoading = true;
+
   @override
   void initState() {
     super.initState();
+
+    _fetchVehicle();
+
+  
     _timer = Timer.periodic(Duration(seconds: featuredImages.length + 1), (
       timer,
     ) {
@@ -271,6 +277,24 @@ class _HomeState extends State<Home> {
         }
       }
     });
+  }
+
+  Future<void> _fetchVehicle() async {
+    try{
+      final response = await VehicleService.getVehicles();
+      setState((){
+        _vehicles = response.map<Vehicle>((json) => Vehicle.fromJson(json)).toList();
+          print(_vehicles);
+        _isLoading = false;
+
+      });
+    }
+    catch(e){
+      print('Error fetching vehicles: $e');
+      setState((){
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -325,7 +349,10 @@ class _HomeState extends State<Home> {
             TextButton(
               onPressed: onSeeAll,
               style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
               ),
               child: Row(
                 children: [
@@ -362,10 +389,13 @@ class _HomeState extends State<Home> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: 8),
-            
+
             // Search bar section
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+                vertical: 12.0,
+              ),
               child: Row(
                 children: [
                   Expanded(
@@ -418,10 +448,7 @@ class _HomeState extends State<Home> {
                       ],
                     ),
                     child: IconButton(
-                      icon: Icon(
-                        Icons.tune,
-                        color: Colors.grey.shade700,
-                      ),
+                      icon: Icon(Icons.tune, color: Colors.grey.shade700),
                       onPressed: () {
                         // Handle filter action
                       },
@@ -432,7 +459,7 @@ class _HomeState extends State<Home> {
             ),
 
             const SizedBox(height: 8),
-            
+
             // Featured Cars section
             _buildSectionHeader('Featured Cars'),
             SizedBox(
@@ -454,7 +481,7 @@ class _HomeState extends State<Home> {
             ),
 
             const SizedBox(height: 24),
-            
+
             // Latest Cars section
             _buildSectionHeader(
               'Latest Cars',
@@ -465,12 +492,12 @@ class _HomeState extends State<Home> {
             SizedBox(
               height: 400,
               child: ListView.builder(
-                itemCount: products.length,
+                itemCount: _vehicles.length,
                 scrollDirection: Axis.horizontal,
                 physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.only(left: 20.0, right: 20.0),
                 itemBuilder: (context, index) {
-                  final item = products[index];
+                  final item = _vehicles[index];
                   return Padding(
                     padding: const EdgeInsets.only(right: 16.0),
                     child: ProductContainer(product: item),
@@ -480,7 +507,7 @@ class _HomeState extends State<Home> {
             ),
 
             const SizedBox(height: 24),
-            
+
             // Popular Cars section
             _buildSectionHeader(
               'Popular Cars',
@@ -491,12 +518,12 @@ class _HomeState extends State<Home> {
             SizedBox(
               height: 400,
               child: ListView.builder(
-                itemCount: products.length,
+                itemCount: _vehicles.length,
                 scrollDirection: Axis.horizontal,
                 physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.only(left: 20.0, right: 20.0),
                 itemBuilder: (context, index) {
-                  final items = products[index];
+                  final items = _vehicles[index];
                   return Padding(
                     padding: const EdgeInsets.only(right: 16.0),
                     child: ProductContainer(product: items),

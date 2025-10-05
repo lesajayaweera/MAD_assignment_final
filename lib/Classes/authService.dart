@@ -38,7 +38,11 @@ class AuthService {
         'email': email,
         'password': password,
       }),
+
+  
     );
+
+    print(ApiService.baseUrl);
 
     final data = ApiService.handleResponse(response);
     
@@ -59,7 +63,7 @@ class AuthService {
       headers: await ApiService.getHeaders(),
     );
 
-    ApiService.handleResponse(response);
+    // ApiService.handleResponse(response);
     await ApiService.removeToken();
   }
 

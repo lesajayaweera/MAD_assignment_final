@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/Classes/apiService.dart';
 import 'package:my_app/Classes/authService.dart';
 
 import 'package:my_app/screens/authWrapper.dart';
@@ -23,7 +24,7 @@ class myAppbar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           onPressed: () async {
-            await AuthService.logout();
+            ApiService.removeToken();
             if (context.mounted) {
               Navigator.pushAndRemoveUntil(
                 context,
@@ -31,6 +32,8 @@ class myAppbar extends StatelessWidget implements PreferredSizeWidget {
                 (route) => false,
               );
             }
+
+            
           },
           icon: Icon(Icons.logout_rounded),
         ),

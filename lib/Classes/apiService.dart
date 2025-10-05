@@ -1,13 +1,30 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:network_info_plus/network_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService{
-  static const String baseUrl = 'http://192.168.8.183:8000/api';
-  
 
+
+  static String? baseUrl ='http://192.168.8.183:8000/api';
   static String? _token;
 
+// static Future<String>getBaseUrl() async{
+//   if (baseUrl != null) return baseUrl!;
+
+//     final info = NetworkInfo();
+//     String? ip = await info.getWifiIP(); // Get local IP address (e.g., 192.168.x.x)
+
+//     if (ip == null || ip.isEmpty) {
+//       throw Exception('Could not detect local IP address');
+//     }
+
+//     // Construct base URL dynamically
+//     baseUrl = 'http://$ip:8000/api';
+//     print(baseUrl);
+//     return baseUrl!;
+
+// }
 
   // getting the headers
 

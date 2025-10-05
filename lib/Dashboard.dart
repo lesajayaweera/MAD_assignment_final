@@ -42,7 +42,9 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
-  final List<Widget> _pages = [Home(), ProductsPage(), Notifications(), Cart()];
+  final List<Widget> _pages = [Home(),
+  //  ProductsPage(),
+    Notifications(), Cart()];
 
   final List<String> _titles = [
     'Home',

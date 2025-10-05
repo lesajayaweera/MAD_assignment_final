@@ -29,6 +29,8 @@ class Vehicle {
   final String updatedAt;
   final User user;
 
+
+  
   Vehicle({
     required this.id,
     required this.uuid,
@@ -59,6 +61,39 @@ class Vehicle {
     required this.user,
   });
 
+  @override
+  String toString() {
+    return 'Vehicle(\n'
+        '  id: $id,\n'
+        '  uuid: $uuid,\n'
+        '  userId: $userId,\n'
+        '  make: $make,\n'
+        '  model: $model,\n'
+        '  year: $year,\n'
+        '  fuelType: $fuelType,\n'
+        '  category: $category,\n'
+        '  transmission: $transmission,\n'
+        '  seatingCapacity: $seatingCapacity,\n'
+        '  condition: $condition,\n'
+        '  engine: $engine,\n'
+        '  price: $price,\n'
+        '  length: $length,\n'
+        '  width: $width,\n'
+        '  height: $height,\n'
+        '  description: $description,\n'
+        '  street: $street,\n'
+        '  city: $city,\n'
+        '  address: $address,\n'
+        '  link: $link,\n'
+        '  imageUrls: $imageUrls,\n'
+        '  status: $status,\n'
+        '  isApproved: $isApproved,\n'
+        '  createdAt: $createdAt,\n'
+        '  updatedAt: $updatedAt,\n'
+        '  user: $user,\n'
+        ')';
+  }
+
   factory Vehicle.fromJson(Map<String, dynamic> json) {
     return Vehicle(
       id: json['id'] as int,
@@ -82,7 +117,10 @@ class Vehicle {
       city: json['city'] as String,
       address: json['address'] as String,
       link: json['link'] as String,
-      imageUrls: List<String>.from(json['image_urls']),
+      imageUrls: List<String>.from(json['images']),
+    //   imageUrls: List<String>.from(
+    //   (json['images'] as List).map((img) => "img"),
+    // ),
       status: json['status'] as String,
       isApproved: json['is_approved'] as String,
       createdAt: json['created_at'] as String,

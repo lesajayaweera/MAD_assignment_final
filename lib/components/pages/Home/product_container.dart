@@ -1,93 +1,10 @@
-// import 'package:flutter/material.dart';
-// import 'package:my_app/Data/items.dart';
-// import 'package:my_app/Essentials/functions.dart';
-// import 'package:my_app/screens/ProductsDetail.dart';
-
-// class ProductContainer extends StatelessWidget {
-//   final Products product;
-
-//   const ProductContainer({super.key, required this.product});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return GestureDetector(
-//       onTap: (){
-//         Navigator.push(context,MaterialPageRoute(builder: (context)=>ProductDetails(product: product,)));
-//       },
-//       child: Card(
-//         elevation: 6,
-//         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-//         margin: const EdgeInsets.all(12),
-//         child: SizedBox(
-//           width: 300,
-
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.stretch,
-//             mainAxisSize: MainAxisSize.min,
-//             children: [
-//               ClipRRect(
-//                 borderRadius: const BorderRadius.vertical(
-//                   top: Radius.circular(16),
-//                 ),
-//                 child: Image.asset(
-//                   product.imageUrl,
-//                   height: 120,
-//                   width: 150,
-//                   fit: BoxFit.cover,
-//                 ),
-//               ),
-//               Padding(
-//                 padding: const EdgeInsets.all(12.0),
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     Text(
-//                       product.name,
-//                       style: const TextStyle(
-//                         fontFamily: 'Poppins',
-//                         fontSize: 18,
-//                         fontWeight: FontWeight.bold,
-//                       ),
-//                     ),
-//                     const SizedBox(height: 4),
-//                     Text(
-//                       product.model,
-//                       style: const TextStyle(
-//                         fontFamily: 'Poppins',
-//                         fontSize: 14,
-//                         fontWeight: FontWeight.w600,
-//                         color: Colors.grey,
-//                       ),
-//                     ),
-//                     const SizedBox(height: 8),
-//                     Text(
-//                       formatPrice(product.price),
-//                       style: TextStyle(
-//                         fontSize: 16,
-//                         fontFamily: 'Poppins',
-//                         color: Colors.green[700],
-//                         fontWeight: FontWeight.w600,
-//                       ),
-//                     ),
-//                     const SizedBox(height: 12),
-//                   ],
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
-import 'package:my_app/Data/items.dart';
+import 'package:my_app/Classes/model/Vehicles.dart';
 import 'package:my_app/Essentials/functions.dart';
 import 'package:my_app/screens/ProductsDetail.dart';
 
 class ProductContainer extends StatefulWidget {
-  final Products product;
+  final Vehicle product;
 
   const ProductContainer({super.key, required this.product});
 
@@ -102,12 +19,13 @@ class _ProductContainerState extends State<ProductContainer> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ProductDetails(product: widget.product),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => ProductDetails(product: widget.product),
+        //   ),
+        // );
+        print("Loading image: ${widget.product.imageUrls[0]}");
       },
       child: MouseRegion(
         onEnter: (_) => setState(() => _isHovered = true),
@@ -129,10 +47,7 @@ class _ProductContainerState extends State<ProductContainer> {
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [
-                    Colors.white,
-                    Colors.grey.shade50,
-                  ],
+                  colors: [Colors.white, Colors.grey.shade50],
                 ),
               ),
               child: Column(
@@ -146,12 +61,56 @@ class _ProductContainerState extends State<ProductContainer> {
                         borderRadius: const BorderRadius.vertical(
                           top: Radius.circular(20),
                         ),
-                        child: Image.asset(
-                          widget.product.imageUrl,
-                          height: 180,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        ),
+                        child: widget.product.imageUrls.isNotEmpty
+                            ? Image.network(
+                                widget.product.imageUrls[0],
+                                height: 180,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  print("Image load error: $error");
+                                  print(stackTrace);
+                                  return Container(
+                                    height: 180,
+                                    color: Colors.grey.shade200,
+                                    child: Icon(
+                                      Icons.directions_car,
+                                      size: 64,
+                                      color: Colors.grey.shade400,
+                                    ),
+                                  );
+                                },
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return Container(
+                                        height: 180,
+                                        color: Colors.grey.shade200,
+                                        child: Center(
+                                          child: CircularProgressIndicator(
+                                            value:
+                                                loadingProgress
+                                                        .expectedTotalBytes !=
+                                                    null
+                                                ? loadingProgress
+                                                          .cumulativeBytesLoaded /
+                                                      loadingProgress
+                                                          .expectedTotalBytes!
+                                                : null,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                              )
+                            : Container(
+                                height: 180,
+                                color: Colors.grey.shade200,
+                                child: Icon(
+                                  Icons.directions_car,
+                                  size: 64,
+                                  color: Colors.grey.shade400,
+                                ),
+                              ),
                       ),
                       // Gradient overlay for better text visibility
                       Positioned(
@@ -198,16 +157,16 @@ class _ProductContainerState extends State<ProductContainer> {
                       ),
                     ],
                   ),
-                  
+
                   // Content Section
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Product Name
+                        // Vehicle Make
                         Text(
-                          widget.product.name,
+                          widget.product.make,
                           style: const TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 18,
@@ -219,8 +178,8 @@ class _ProductContainerState extends State<ProductContainer> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 6),
-                        
-                        // Product Model
+
+                        // Vehicle Model and Year
                         Row(
                           children: [
                             Icon(
@@ -231,7 +190,7 @@ class _ProductContainerState extends State<ProductContainer> {
                             const SizedBox(width: 4),
                             Expanded(
                               child: Text(
-                                widget.product.model,
+                                '${widget.product.model} (${widget.product.year})',
                                 style: TextStyle(
                                   fontFamily: 'Poppins',
                                   fontSize: 13,
@@ -245,14 +204,11 @@ class _ProductContainerState extends State<ProductContainer> {
                           ],
                         ),
                         const SizedBox(height: 12),
-                        
+
                         // Divider
-                        Divider(
-                          color: Colors.grey.shade200,
-                          height: 1,
-                        ),
+                        Divider(color: Colors.grey.shade200, height: 1),
                         const SizedBox(height: 12),
-                        
+
                         // Price and Button Row
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -271,19 +227,19 @@ class _ProductContainerState extends State<ProductContainer> {
                                   ),
                                 ),
                                 const SizedBox(height: 2),
-                                Text(
-                                  formatPrice(widget.product.price),
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontFamily: 'Poppins',
-                                    color: Colors.green.shade700,
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: -0.5,
-                                  ),
-                                ),
+                                // Text(
+                                //   formatPrice(widget.product.price),
+                                //   style: TextStyle(
+                                //     fontSize: 20,
+                                //     fontFamily: 'Poppins',
+                                //     color: Colors.green.shade700,
+                                //     fontWeight: FontWeight.bold,
+                                //     letterSpacing: -0.5,
+                                //   ),
+                                // ),
                               ],
                             ),
-                            
+
                             // View Details Button
                             Container(
                               decoration: BoxDecoration(
@@ -307,14 +263,14 @@ class _ProductContainerState extends State<ProductContainer> {
                                 child: InkWell(
                                   borderRadius: BorderRadius.circular(12),
                                   onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ProductDetails(
-                                          product: widget.product,
-                                        ),
-                                      ),
-                                    );
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //     builder: (context) => ProductDetails(
+                                    //       product: widget.product,
+                                    //     ),
+                                    //   ),
+                                    // );
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
