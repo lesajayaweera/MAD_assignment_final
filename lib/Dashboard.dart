@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/Classes/apiService.dart';
+import 'package:my_app/Classes/model/ShakeService.dart';
+
 import 'package:my_app/components/common/myappBar.dart';
 import 'package:my_app/components/common/mydrawer.dart';
 import 'package:my_app/screens/CarListing.dart';
 import 'package:my_app/screens/Cart.dart';
 import 'package:my_app/screens/Notifications.dart';
 import 'package:my_app/screens/home.dart';
+import 'package:my_app/screens/authWrapper.dart';
 
 class Dashboard extends StatefulWidget {
   final String token;
@@ -18,15 +21,58 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   int selected = 0;
   bool _isLogin = false;
-
+  final ShakeDetector _shakeDetector = ShakeDetector();
 
   @override
   void initState() {
     super.initState();
-    _checkLoginStatus(); // Check if user is already logged in
+    _checkLoginStatus();
+    _startShakeDetection();
   }
 
-  // Check if a token exists to determine login status
+  @override
+  void dispose() {
+    _shakeDetector.stopListening();
+    super.dispose();
+  }
+
+  void _startShakeDetection() {
+    _shakeDetector.startListening(() {
+      _showLogoutDialog();
+    });
+  }
+
+  void _showLogoutDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Logout'),
+          content: const Text('Shake detected! Do you want to logout?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                await ApiService.removeToken();
+                if (!mounted) return;
+                
+                Navigator.of(context).pop(); // Close dialog
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const AuthWrapper()),
+                  (route) => false,
+                );
+              },
+              child: const Text('Logout', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _checkLoginStatus() async {
     final token = await ApiService.getToken();
     if (token != null) {
@@ -42,9 +88,12 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
-  final List<Widget> _pages = [Home(),
-   ProductsPage(),
-    Notifications(), Cart()];
+  final List<Widget> _pages = [
+    Home(),
+    ProductsPage(),
+    Notifications(),
+    Cart()
+  ];
 
   final List<String> _titles = [
     'Home',

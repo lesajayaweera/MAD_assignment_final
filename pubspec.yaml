@@ -40,6 +40,8 @@ dependencies:
   geolocator: ^10.1.0
   geocoding: ^2.1.1
   flutter_contacts: ^1.1.7
+  sensors_plus: ^7.0.0
+  
 
 dev_dependencies:
   flutter_test:
