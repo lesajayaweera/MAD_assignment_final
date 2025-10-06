@@ -657,6 +657,8 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Billing Information'),
@@ -672,11 +674,12 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Enter Billing Details',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
+                        color: isDark ? Colors.white : Colors.black,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -684,7 +687,7 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
                       'Please provide your billing information',
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.grey[600],
+                        color: isDark ? Colors.grey.shade400 : Colors.grey[600],
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -708,6 +711,9 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
+                              side: BorderSide(
+                                color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
+                              ),
                             ),
                           ),
                         ),
@@ -728,6 +734,9 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
+                              side: BorderSide(
+                                color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
+                              ),
                             ),
                           ),
                         ),
@@ -737,11 +746,12 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
                     const SizedBox(height: 24),
                     
                     // Personal Information Section
-                    const Text(
+                    Text(
                       'Personal Information',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
+                        color: isDark ? Colors.white : Colors.black,
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -795,11 +805,12 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
                     const SizedBox(height: 24),
                     
                     // Billing Address Section
-                    const Text(
+                    Text(
                       'Billing Address',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
+                        color: isDark ? Colors.white : Colors.black,
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -896,18 +907,34 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
     String? Function(String?)? validator,
     TextInputType? keyboardType,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return TextFormField(
       controller: controller,
+      style: TextStyle(
+        color: isDark ? Colors.white : Colors.black,
+      ),
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        prefixIcon: Icon(icon),
+        labelStyle: TextStyle(
+          color: isDark ? Colors.grey.shade400 : Colors.grey.shade700,
+        ),
+        hintStyle: TextStyle(
+          color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
+        ),
+        prefixIcon: Icon(
+          icon,
+          color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey[300]!),
+          borderSide: BorderSide(
+            color: isDark ? Colors.grey.shade700 : Colors.grey[300]!,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -918,7 +945,7 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
           borderSide: const BorderSide(color: Colors.red),
         ),
         filled: true,
-        fillColor: Colors.grey[50],
+        fillColor: isDark ? Colors.grey.shade900 : Colors.grey[50],
       ),
       keyboardType: keyboardType,
       validator: validator,
@@ -926,10 +953,12 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
   }
 
   Widget _buildOrderSummaryCard() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final totalWithTax = widget.total + (widget.total * 0.09);
     
     return Card(
       elevation: 2,
+      color: isDark ? Colors.grey.shade900 : Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
@@ -938,11 +967,12 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Order Summary',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : Colors.black,
               ),
             ),
             const SizedBox(height: 16),
@@ -951,15 +981,20 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
             _buildSummaryRow('Subtotal', formatPrice(widget.total)),
             const SizedBox(height: 8),
             _buildSummaryRow('Tax (9%)', formatPrice(widget.total * 0.09)),
-            const Divider(height: 24, thickness: 1.5),
+            Divider(
+              height: 24,
+              thickness: 1.5,
+              color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   'Total Amount',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
+                    color: isDark ? Colors.white : Colors.black,
                   ),
                 ),
                 Text(
@@ -979,6 +1014,8 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
   }
 
   Widget _buildSummaryRow(String label, String value) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -986,14 +1023,15 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
           label,
           style: TextStyle(
             fontSize: 16,
-            color: Colors.grey[700],
+            color: isDark ? Colors.grey.shade400 : Colors.grey[700],
           ),
         ),
         Text(
           value,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w500,
+            color: isDark ? Colors.white : Colors.black,
           ),
         ),
       ],
@@ -1001,13 +1039,15 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
   }
 
   Widget _buildCheckoutButton() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? Colors.grey.shade900 : Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withOpacity(isDark ? 0.3 : 0.1),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
@@ -1024,12 +1064,14 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
             elevation: 0,
           ),
           child: _isProcessing
-              ? const SizedBox(
+              ? SizedBox(
                   height: 24,
                   width: 24,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      isDark ? Colors.black : Colors.white,
+                    ),
                   ),
                 )
               : const Text(
