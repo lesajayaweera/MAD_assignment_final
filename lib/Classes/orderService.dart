@@ -2,16 +2,22 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:my_app/Classes/apiService.dart';
+import 'package:my_app/Classes/model/Orders.dart';
 
 class OrderService {
   // Get user's orders
-  static Future<Map<String, dynamic>> getOrders() async {
+  static Future<List<Order>> getOrders() async {
     final response = await http.get(
       Uri.parse('${ApiService.baseUrl}/orders'),
       headers: await ApiService.getHeaders(),
     );
 
-    return ApiService.handleResponse(response);
+    final data = ApiService.handleResponse(response);
+    final List<dynamic> orderList = data['data'];
+
+    return List<Order>.from(
+      orderList.map<Order>((dynamic json) => Order.fromJson(json as Map<String, dynamic>))
+    );
   }
 
   // Create new order

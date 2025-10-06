@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/Classes/model/Vehicles.dart';
 
 import 'package:my_app/Data/items.dart';
 import 'package:my_app/Essentials/functions.dart';
 
 class CartItem extends StatefulWidget {
   const CartItem({super.key, required this.product, required this.remove});
-  final Products product;
+  final Vehicle product;
   final VoidCallback remove;
 
   @override
@@ -27,7 +28,7 @@ class _CartItemState extends State<CartItem> {
             ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
               child: Image.asset(
-                widget.product.imageUrl,
+                widget.product.imageUrls.first,
                 width: 80,
                 height: 80,
                 fit: BoxFit.cover,
@@ -40,7 +41,7 @@ class _CartItemState extends State<CartItem> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    widget.product.name,
+                    widget.product.model,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16.0,
@@ -53,7 +54,7 @@ class _CartItemState extends State<CartItem> {
                   ),
                   SizedBox(height: 8.0),
                   Text(
-                    formatPrice(widget.product.price), // Add dollar sign
+                    formatPrice(double.parse(widget.product.price)), // Add dollar sign
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16.0,
