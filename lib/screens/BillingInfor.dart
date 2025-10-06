@@ -379,7 +379,6 @@
 //     );
 //   }
 // }
-
 import 'package:flutter/material.dart';
 import 'package:my_app/Classes/orderService.dart';
 import 'package:my_app/Data/notifications.dart';
@@ -388,6 +387,7 @@ import 'package:my_app/Classes/model/Orders.dart';
 import 'package:my_app/screens/OrderSucess.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 
 class BillingInfoScreen extends StatefulWidget {
   final List<Order> orders;
@@ -405,22 +405,105 @@ class BillingInfoScreen extends StatefulWidget {
 
 class _BillingInfoScreenState extends State<BillingInfoScreen> {
   final _formKey = GlobalKey<FormState>();
+  
+  // User Details Controllers
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+  
+  // Address Controllers
   final _addressController = TextEditingController();
   final _cityController = TextEditingController();
   final _countryController = TextEditingController();
   final _zipcodeController = TextEditingController();
   final _apartmentController = TextEditingController();
+  
   bool _isProcessing = false;
   bool _isFetchingLocation = false;
+  bool _isFetchingContact = false;
 
   @override
   void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
     _addressController.dispose();
     _cityController.dispose();
     _countryController.dispose();
     _zipcodeController.dispose();
     _apartmentController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickContactDetails() async {
+    setState(() {
+      _isFetchingContact = true;
+    });
+
+    try {
+      // Request permission
+      if (!await FlutterContacts.requestPermission(readonly: true)) {
+        throw Exception('Contact permission denied');
+      }
+
+      // Pick a contact
+      final contact = await FlutterContacts.openExternalPick();
+      
+      if (contact != null) {
+        // Fetch full contact details
+        final fullContact = await FlutterContacts.getContact(contact.id);
+        
+        if (fullContact != null) {
+          setState(() {
+            // Fill user details
+            _nameController.text = fullContact.displayName;
+            
+            // Fill email if available
+            if (fullContact.emails.isNotEmpty) {
+              _emailController.text = fullContact.emails.first.address;
+            }
+            
+            // Fill phone if available
+            if (fullContact.phones.isNotEmpty) {
+              _phoneController.text = fullContact.phones.first.number;
+            }
+            
+            // Fill address if available
+            if (fullContact.addresses.isNotEmpty) {
+              final address = fullContact.addresses.first;
+              _addressController.text = address.street ?? '';
+              _cityController.text = address.city ?? '';
+              _countryController.text = address.country ?? '';
+              _zipcodeController.text = address.postalCode ?? '';
+            }
+          });
+
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Contact details imported successfully!'),
+                backgroundColor: Colors.green,
+                duration: Duration(seconds: 2),
+              ),
+            );
+          }
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to import contact: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    } finally {
+      setState(() {
+        _isFetchingContact = false;
+      });
+    }
   }
 
   Future<void> _fetchLocationDetails() async {
@@ -464,8 +547,7 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
 
         setState(() {
           // Fill the form fields
-          _addressController.text = 
-              '${place.street ?? ''}'.trim();
+          _addressController.text = '${place.street ?? ''}'.trim();
           // Try multiple fields for city
           _cityController.text = place.locality ?? 
                                  place.subAdministrativeArea ?? 
@@ -512,6 +594,7 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
 
     try {
       final billingInfo = {
+        
         'address': _addressController.text.trim(),
         'city': _cityController.text.trim(),
         'country': _countryController.text.trim(),
@@ -598,34 +681,129 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Please provide your billing address information',
+                      'Please provide your billing information',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.grey[600],
                       ),
                     ),
                     const SizedBox(height: 16),
-                    // Location Button
-                    OutlinedButton.icon(
-                      onPressed: _isFetchingLocation ? null : _fetchLocationDetails,
-                      icon: _isFetchingLocation
-                          ? const SizedBox(
-                              width: 16,
-                              height: 16,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : const Icon(Icons.my_location),
-                      label: Text(_isFetchingLocation
-                          ? 'Fetching Location...'
-                          : 'Use My Current Location'),
-                      style: OutlinedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 48),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                    
+                    // Quick Fill Buttons
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: _isFetchingContact ? null : _pickContactDetails,
+                            icon: _isFetchingContact
+                                ? const SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: CircularProgressIndicator(strokeWidth: 2),
+                                  )
+                                : const Icon(Icons.contacts),
+                            label: const Text('Import Contact'),
+                            style: OutlinedButton.styleFrom(
+                              minimumSize: const Size(0, 48),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
                         ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: _isFetchingLocation ? null : _fetchLocationDetails,
+                            icon: _isFetchingLocation
+                                ? const SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: CircularProgressIndicator(strokeWidth: 2),
+                                  )
+                                : const Icon(Icons.my_location),
+                            label: const Text('Use Location'),
+                            style: OutlinedButton.styleFrom(
+                              minimumSize: const Size(0, 48),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    
+                    const SizedBox(height: 24),
+                    
+                    // Personal Information Section
+                    const Text(
+                      'Personal Information',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
+                    const SizedBox(height: 16),
+                    
+                    _buildTextField(
+                      controller: _nameController,
+                      label: 'Full Name',
+                      hint: 'John Doe',
+                      icon: Icons.person_outline,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Please enter your name';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    
+                    _buildTextField(
+                      controller: _emailController,
+                      label: 'Email Address',
+                      hint: 'john@example.com',
+                      icon: Icons.email_outlined,
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Please enter your email';
+                        }
+                        if (!value.contains('@')) {
+                          return 'Please enter a valid email';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    
+                    _buildTextField(
+                      controller: _phoneController,
+                      label: 'Phone Number',
+                      hint: '+1 234 567 8900',
+                      icon: Icons.phone_outlined,
+                      keyboardType: TextInputType.phone,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Please enter your phone number';
+                        }
+                        return null;
+                      },
+                    ),
+                    
                     const SizedBox(height: 24),
+                    
+                    // Billing Address Section
+                    const Text(
+                      'Billing Address',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    
                     _buildTextField(
                       controller: _addressController,
                       label: 'Street Address',
@@ -639,6 +817,7 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
                       },
                     ),
                     const SizedBox(height: 16),
+                    
                     _buildTextField(
                       controller: _apartmentController,
                       label: 'Apartment/Suite (Optional)',
@@ -646,6 +825,7 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
                       icon: Icons.apartment_outlined,
                     ),
                     const SizedBox(height: 16),
+                    
                     _buildTextField(
                       controller: _cityController,
                       label: 'City',
@@ -659,6 +839,7 @@ class _BillingInfoScreenState extends State<BillingInfoScreen> {
                       },
                     ),
                     const SizedBox(height: 16),
+                    
                     Row(
                       children: [
                         Expanded(
