@@ -693,6 +693,14 @@ class _HomeState extends State<Home> {
     }
   }
 
+  // Pull-to-refresh handler
+  Future<void> _handleRefresh() async {
+    setState(() {
+      _isLoading = true;
+    });
+    await _fetchVehicle();
+  }
+
   @override
   void dispose() {
     _timer.cancel();
@@ -702,7 +710,7 @@ class _HomeState extends State<Home> {
 
   Widget _buildSectionHeader(String title, {VoidCallback? onSeeAll}) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
       child: Row(
@@ -754,7 +762,7 @@ class _HomeState extends State<Home> {
 
   Widget _buildEmptyState() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Container(
       height: 300,
       margin: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -800,7 +808,7 @@ class _HomeState extends State<Home> {
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
-              onPressed: _fetchVehicle,
+              onPressed: _handleRefresh,
               icon: const Icon(Icons.refresh),
               label: const Text('Refresh'),
               style: ElevatedButton.styleFrom(
@@ -832,184 +840,201 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 8),
+      body: RefreshIndicator(
+        onRefresh: _handleRefresh,
+        color: Colors.blue.shade700,
+        backgroundColor: isDark ? Colors.grey.shade900 : Colors.white,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(
+            parent: BouncingScrollPhysics(),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 8),
 
-            // Search bar section
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20.0,
-                vertical: 12.0,
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
+              // Search bar section
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20.0,
+                  vertical: 12.0,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: isDark ? Colors.grey.shade900 : Colors.white,
+                          borderRadius: BorderRadius.circular(14.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(
+                                isDark ? 0.3 : 0.04,
+                              ),
+                              blurRadius: 10,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: TextField(
+                          style: TextStyle(
+                            color: isDark ? Colors.white : Colors.black,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: 'Search for cars...',
+                            hintStyle: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 15,
+                              color: isDark
+                                  ? Colors.grey.shade500
+                                  : Colors.grey.shade400,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            prefixIcon: Icon(
+                              Icons.search,
+                              color: isDark
+                                  ? Colors.grey.shade500
+                                  : Colors.grey.shade600,
+                              size: 22,
+                            ),
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 14,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12.0),
+                    Container(
                       decoration: BoxDecoration(
                         color: isDark ? Colors.grey.shade900 : Colors.white,
                         borderRadius: BorderRadius.circular(14.0),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(isDark ? 0.3 : 0.04),
+                            color: Colors.black.withOpacity(
+                              isDark ? 0.3 : 0.04,
+                            ),
                             blurRadius: 10,
                             offset: const Offset(0, 2),
                           ),
                         ],
                       ),
-                      child: TextField(
-                        style: TextStyle(
-                          color: isDark ? Colors.white : Colors.black,
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.tune,
+                          color: isDark
+                              ? Colors.grey.shade400
+                              : Colors.grey.shade700,
                         ),
-                        decoration: InputDecoration(
-                          hintText: 'Search for cars...',
-                          hintStyle: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 15,
-                            color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          prefixIcon: Icon(
-                            Icons.search,
-                            color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
-                            size: 22,
-                          ),
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 14,
-                          ),
-                        ),
+                        onPressed: () {
+                          // Handle filter action
+                        },
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 12.0),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: isDark ? Colors.grey.shade900 : Colors.white,
-                      borderRadius: BorderRadius.circular(14.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(isDark ? 0.3 : 0.04),
-                          blurRadius: 10,
-                          offset: const Offset(0, 2),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 8),
+
+              // Show loading, empty state, or content
+              _isLoading
+                  ? _buildLoadingState()
+                  : _vehicles.isEmpty
+                  ? _buildEmptyState()
+                  : Column(
+                      children: [
+                        // Featured Cars section
+                        _buildSectionHeader('Featured Cars'),
+                        SizedBox(
+                          height: 180,
+                          child: ListView.builder(
+                            itemCount: _vehicles.length,
+                            physics: const BouncingScrollPhysics(),
+                            controller: _scrollController,
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.only(
+                              left: 20.0,
+                              right: 20.0,
+                            ),
+                            itemBuilder: (context, index) {
+                              final car = _vehicles[index];
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 16.0),
+                                child: featuredItem(product: car),
+                              );
+                            },
+                          ),
                         ),
+
+                        const SizedBox(height: 24),
+
+                        // Latest Cars section
+                        _buildSectionHeader(
+                          'Latest Cars',
+                          onSeeAll: () {
+                            // Handle see all action
+                          },
+                        ),
+                        SizedBox(
+                          height: 400,
+                          child: ListView.builder(
+                            itemCount: _vehicles.length,
+                            scrollDirection: Axis.horizontal,
+                            physics: const BouncingScrollPhysics(),
+                            padding: const EdgeInsets.only(
+                              left: 20.0,
+                              right: 20.0,
+                            ),
+                            itemBuilder: (context, index) {
+                              final item = _vehicles[index];
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 16.0),
+                                child: ProductContainer(product: item),
+                              );
+                            },
+                          ),
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // Popular Cars section
+                        _buildSectionHeader(
+                          'Popular Cars',
+                          onSeeAll: () {
+                            // Handle see all action
+                          },
+                        ),
+                        SizedBox(
+                          height: 400,
+                          child: ListView.builder(
+                            itemCount: _vehicles.length,
+                            scrollDirection: Axis.horizontal,
+                            physics: const BouncingScrollPhysics(),
+                            padding: const EdgeInsets.only(
+                              left: 20.0,
+                              right: 20.0,
+                            ),
+                            itemBuilder: (context, index) {
+                              final items = _vehicles[index];
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 16.0),
+                                child: ProductContainer(product: items),
+                              );
+                            },
+                          ),
+                        ),
+
+                        const SizedBox(height: 24),
                       ],
                     ),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.tune,
-                        color: isDark ? Colors.grey.shade400 : Colors.grey.shade700,
-                      ),
-                      onPressed: () {
-                        // Handle filter action
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 8),
-
-            // Show loading, empty state, or content
-            _isLoading
-                ? _buildLoadingState()
-                : _vehicles.isEmpty
-                ? _buildEmptyState()
-                : Column(
-                    children: [
-                      // Featured Cars section
-                      _buildSectionHeader('Featured Cars'),
-                      SizedBox(
-                        height: 180,
-                        child: ListView.builder(
-                          itemCount: _vehicles.length,
-                          physics: const BouncingScrollPhysics(),
-                          controller: _scrollController,
-                          scrollDirection: Axis.horizontal,
-                          padding: const EdgeInsets.only(
-                            left: 20.0,
-                            right: 20.0,
-                          ),
-                          itemBuilder: (context, index) {
-                            final car = _vehicles[index];
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 16.0),
-                              child: featuredItem(product: car),
-                            );
-                          },
-                        ),
-                      ),
-
-                      const SizedBox(height: 24),
-
-                      // Latest Cars section
-                      _buildSectionHeader(
-                        'Latest Cars',
-                        onSeeAll: () {
-                          // Handle see all action
-                        },
-                      ),
-                      SizedBox(
-                        height: 400,
-                        child: ListView.builder(
-                          itemCount: _vehicles.length,
-                          scrollDirection: Axis.horizontal,
-                          physics: const BouncingScrollPhysics(),
-                          padding: const EdgeInsets.only(
-                            left: 20.0,
-                            right: 20.0,
-                          ),
-                          itemBuilder: (context, index) {
-                            final item = _vehicles[index];
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 16.0),
-                              child: ProductContainer(product: item),
-                            );
-                          },
-                        ),
-                      ),
-
-                      const SizedBox(height: 24),
-
-                      // Popular Cars section
-                      _buildSectionHeader(
-                        'Popular Cars',
-                        onSeeAll: () {
-                          // Handle see all action
-                        },
-                      ),
-                      SizedBox(
-                        height: 400,
-                        child: ListView.builder(
-                          itemCount: _vehicles.length,
-                          scrollDirection: Axis.horizontal,
-                          physics: const BouncingScrollPhysics(),
-                          padding: const EdgeInsets.only(
-                            left: 20.0,
-                            right: 20.0,
-                          ),
-                          itemBuilder: (context, index) {
-                            final items = _vehicles[index];
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 16.0),
-                              child: ProductContainer(product: items),
-                            );
-                          },
-                        ),
-                      ),
-
-                      const SizedBox(height: 24),
-                    ],
-                  ),
-          ],
+            ],
+          ),
         ),
       ),
     );
