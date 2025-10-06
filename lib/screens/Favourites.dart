@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/Classes/favourite_service.dart';
 import 'package:my_app/Classes/model/Vehicles.dart';
 import 'package:my_app/Essentials/functions.dart';
-
 import 'package:my_app/screens/ProductsDetail.dart';
+
 
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({super.key});
@@ -12,9 +13,9 @@ class FavoritesPage extends StatefulWidget {
 }
 
 class _FavoritesPageState extends State<FavoritesPage> {
-  // This would typically come from a favorites service or state management
   List<Vehicle> _favorites = [];
   bool _isLoading = false;
+  String? _errorMessage;
 
   @override
   void initState() {
@@ -25,60 +26,115 @@ class _FavoritesPageState extends State<FavoritesPage> {
   Future<void> _loadFavorites() async {
     setState(() {
       _isLoading = true;
+      _errorMessage = null;
     });
 
-    // TODO: Replace with actual API call to fetch favorites
-    // Example: _favorites = await FavoritesService.getFavorites();
-    
-    await Future.delayed(const Duration(seconds: 1)); // Simulate API call
-
-    setState(() {
-      _isLoading = false;
-    });
+    try {
+      final favoritesData = await FavoriteService.getFavorites();
+      
+      setState(() {
+        _favorites = favoritesData
+            .map((fav) => Vehicle.fromJson(fav['vehicle'] as Map<String, dynamic>))
+            .toList();
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _errorMessage = 'Failed to load favorites: $e';
+      });
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to load favorites'),
+            backgroundColor: Colors.red.shade600,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    }
   }
 
-  void _removeFavorite(Vehicle vehicle) {
+  Future<void> _removeFavorite(Vehicle vehicle) async {
+    // Optimistically remove from UI
+    final removedVehicle = vehicle;
+    final removedIndex = _favorites.indexOf(vehicle);
+    
     setState(() {
       _favorites.remove(vehicle);
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.check_circle, color: Colors.white),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                '${vehicle.make} ${vehicle.model} removed from favorites',
-                style: const TextStyle(
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w500,
+    try {
+      await FavoriteService.removeFavorite(vehicle.uuid);
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.check_circle, color: Colors.white),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    '${vehicle.make} ${vehicle.model} removed from favorites',
+                    style: const TextStyle(
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-        backgroundColor: Colors.red.shade600,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        duration: const Duration(seconds: 2),
-        action: SnackBarAction(
-          label: 'Undo',
-          textColor: Colors.white,
-          onPressed: () {
-            setState(() {
-              _favorites.add(vehicle);
-            });
-          },
-        ),
-      ),
-    );
+            backgroundColor: Colors.red.shade600,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            duration: const Duration(seconds: 3),
+            action: SnackBarAction(
+              label: 'Undo',
+              textColor: Colors.white,
+              onPressed: () async {
+                try {
+                  await FavoriteService.addFavorite(removedVehicle.uuid);
+                  setState(() {
+                    _favorites.insert(removedIndex, removedVehicle);
+                  });
+                } catch (e) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Failed to restore favorite'),
+                        backgroundColor: Colors.red.shade600,
+                      ),
+                    );
+                  }
+                }
+              },
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      // Restore on error
+      setState(() {
+        _favorites.insert(removedIndex, removedVehicle);
+      });
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to remove favorite'),
+            backgroundColor: Colors.red.shade600,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    }
   }
 
-  void _clearAllFavorites() {
+  Future<void> _clearAllFavorites() async {
     showDialog(
       context: context,
       builder: (context) {
@@ -110,17 +166,47 @@ class _FavoritesPageState extends State<FavoritesPage> {
               child: const Text('Cancel'),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
+                Navigator.pop(context);
+                
+                // Store favorites in case we need to restore
+                final previousFavorites = List<Vehicle>.from(_favorites);
+                
                 setState(() {
                   _favorites.clear();
                 });
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: const Text('All favorites cleared'),
-                    backgroundColor: Colors.red.shade600,
-                  ),
-                );
+
+                try {
+                  // Remove all favorites from API
+                  await Future.wait(
+                    previousFavorites.map((v) => FavoriteService.removeFavorite(v.uuid))
+                  );
+                  
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: const Text('All favorites cleared'),
+                        backgroundColor: Colors.red.shade600,
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  }
+                } catch (e) {
+                  // Restore on error
+                  setState(() {
+                    _favorites = previousFavorites;
+                  });
+                  
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Failed to clear all favorites'),
+                        backgroundColor: Colors.red.shade600,
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  }
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red.shade600,
@@ -145,6 +231,11 @@ class _FavoritesPageState extends State<FavoritesPage> {
         title: const Text('My Favorites'),
         elevation: 0,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _loadFavorites,
+            tooltip: 'Refresh',
+          ),
           if (_favorites.isNotEmpty)
             IconButton(
               icon: const Icon(Icons.delete_outline),
@@ -159,108 +250,110 @@ class _FavoritesPageState extends State<FavoritesPage> {
                 color: Colors.blue.shade600,
               ),
             )
-          : _favorites.isEmpty
-              ? _buildEmptyState()
-              : Column(
-                  children: [
-                    // Stats Header
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      color: isDark ? Colors.grey.shade900 : Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+          : _errorMessage != null
+              ? _buildErrorState()
+              : _favorites.isEmpty
+                  ? _buildEmptyState()
+                  : Column(
+                      children: [
+                        // Stats Header
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          color: isDark ? Colors.grey.shade900 : Colors.white,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                'Your Collection',
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: isDark ? Colors.white : Colors.black,
-                                ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Your Collection',
+                                    style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: isDark ? Colors.white : Colors.black,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '${_favorites.length} ${_favorites.length == 1 ? 'vehicle' : 'vehicles'} saved',
+                                    style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 14,
+                                      color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(height: 4),
-                              Text(
-                                '${_favorites.length} ${_favorites.length == 1 ? 'vehicle' : 'vehicles'} saved',
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 14,
-                                  color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: isDark
+                                      ? Colors.red.shade900.withOpacity(0.3)
+                                      : Colors.red.shade50,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.favorite,
+                                      color: Colors.red.shade600,
+                                      size: 20,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      '${_favorites.length}',
+                                      style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.red.shade600,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              color: isDark
-                                  ? Colors.red.shade900.withOpacity(0.3)
-                                  : Colors.red.shade50,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.favorite,
-                                  color: Colors.red.shade600,
-                                  size: 20,
+                        ),
+
+                        // Grid View
+                        Expanded(
+                          child: LayoutBuilder(
+                            builder: (context, constraints) {
+                              double screenWidth = constraints.maxWidth;
+
+                              int crossAxisCount = orientation == Orientation.landscape
+                                  ? (screenWidth ~/ 280).clamp(2, 6)
+                                  : (screenWidth ~/ 320).clamp(1, 4);
+
+                              double aspectRatio =
+                                  orientation == Orientation.landscape ? 0.85 : 0.95;
+
+                              return GridView.builder(
+                                itemCount: _favorites.length,
+                                physics: const BouncingScrollPhysics(),
+                                padding: const EdgeInsets.all(20),
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: crossAxisCount,
+                                  mainAxisSpacing: 20,
+                                  crossAxisSpacing: 20,
+                                  childAspectRatio: aspectRatio,
                                 ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  '${_favorites.length}',
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.red.shade600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // Grid View
-                    Expanded(
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          double screenWidth = constraints.maxWidth;
-
-                          int crossAxisCount = orientation == Orientation.landscape
-                              ? (screenWidth ~/ 280).clamp(2, 6)
-                              : (screenWidth ~/ 320).clamp(1, 4);
-
-                          double aspectRatio =
-                              orientation == Orientation.landscape ? 0.85 : 0.95;
-
-                          return GridView.builder(
-                            itemCount: _favorites.length,
-                            physics: const BouncingScrollPhysics(),
-                            padding: const EdgeInsets.all(20),
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: crossAxisCount,
-                              mainAxisSpacing: 20,
-                              crossAxisSpacing: 20,
-                              childAspectRatio: aspectRatio,
-                            ),
-                            itemBuilder: (context, index) {
-                              final vehicle = _favorites[index];
-                              return _buildFavoriteCard(vehicle);
+                                itemBuilder: (context, index) {
+                                  final vehicle = _favorites[index];
+                                  return _buildFavoriteCard(vehicle);
+                                },
+                              );
                             },
-                          );
-                        },
-                      ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
     );
   }
 
@@ -268,13 +361,15 @@ class _FavoritesPageState extends State<FavoritesPage> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
+      onTap: () async {
+        await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => ProductDetails(product: vehicle),
           ),
         );
+        // Refresh favorites when returning in case it was unfavorited
+        _loadFavorites();
       },
       child: Container(
         decoration: BoxDecoration(
@@ -459,6 +554,61 @@ class _FavoritesPageState extends State<FavoritesPage> {
               },
               icon: const Icon(Icons.explore),
               label: const Text('Explore Vehicles'),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 16,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorState() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(40.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: 80,
+              color: Colors.red.shade400,
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'Oops! Something went wrong',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : Colors.black,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              _errorMessage ?? 'Failed to load favorites',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 14,
+                color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+              ),
+            ),
+            const SizedBox(height: 32),
+            ElevatedButton.icon(
+              onPressed: _loadFavorites,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Try Again'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 32,

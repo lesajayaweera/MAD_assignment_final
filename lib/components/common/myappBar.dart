@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/Classes/apiService.dart';
 import 'package:my_app/Classes/authService.dart';
+import 'package:my_app/screens/Favourites.dart';
 
 import 'package:my_app/screens/authWrapper.dart';
 
@@ -22,6 +23,10 @@ class myAppbar extends StatelessWidget implements PreferredSizeWidget {
       ),
       centerTitle: true,
       actions: [
+        IconButton(onPressed: (){
+          Navigator.push(context,MaterialPageRoute(builder: (context)=>FavoritesPage()));
+        }, icon: Icon(Icons.favorite))
+        ,
         IconButton(
           onPressed: () async {
             ApiService.removeToken();
