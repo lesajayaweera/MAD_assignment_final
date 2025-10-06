@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/Classes/favourite_service.dart';
 import 'package:my_app/Classes/model/Vehicles.dart';
 import 'package:my_app/Essentials/functions.dart';
 import 'package:my_app/screens/ProductsDetail.dart';
 
+
 class ProductContainer extends StatefulWidget {
   final Vehicle product;
+  final bool initialIsFavorite;
+  final VoidCallback? onFavoriteChanged;
 
-  const ProductContainer({super.key, required this.product});
+  const ProductContainer({
+    super.key, 
+    required this.product,
+    this.initialIsFavorite = false,
+    this.onFavoriteChanged,
+  });
 
   @override
   State<ProductContainer> createState() => _ProductContainerState();
@@ -14,6 +23,64 @@ class ProductContainer extends StatefulWidget {
 
 class _ProductContainerState extends State<ProductContainer> {
   bool _isHovered = false;
+  late bool _isFavorite;
+  bool _isProcessing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _isFavorite = widget.initialIsFavorite;
+  }
+
+  Future<void> _toggleFavorite() async {
+    if (_isProcessing) return;
+
+    setState(() => _isProcessing = true);
+
+    try {
+      if (_isFavorite) {
+        await FavoriteService.removeFavorite(widget.product.uuid);
+        setState(() => _isFavorite = false);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Removed from favorites'),
+              duration: Duration(seconds: 2),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+      } else {
+        await FavoriteService.addFavorite(widget.product.uuid);
+        setState(() => _isFavorite = true);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Added to favorites'),
+              duration: Duration(seconds: 2),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+      }
+      widget.onFavoriteChanged?.call();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to update favorites: $e'),
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isProcessing = false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,29 +197,45 @@ class _ProductContainerState extends State<ProductContainer> {
                           ),
                         ),
                       ),
-                      // Favorite Icon (optional)
+                      // Favorite Icon Button
                       Positioned(
                         top: 12,
                         right: 12,
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: isDark 
-                                ? Colors.grey.shade800.withOpacity(0.9)
-                                : Colors.white.withOpacity(0.9),
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(isDark ? 0.3 : 0.1),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: Icon(
-                            Icons.favorite_border,
-                            color: isDark ? Colors.grey.shade400 : Colors.grey.shade700,
-                            size: 20,
+                        child: GestureDetector(
+                          onTap: _isProcessing ? null : _toggleFavorite,
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: isDark 
+                                  ? Colors.grey.shade800.withOpacity(0.9)
+                                  : Colors.white.withOpacity(0.9),
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(isDark ? 0.3 : 0.1),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: _isProcessing
+                                ? SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.red.shade400,
+                                      ),
+                                    ),
+                                  )
+                                : Icon(
+                                    _isFavorite ? Icons.favorite : Icons.favorite_border,
+                                    color: _isFavorite 
+                                        ? Colors.red.shade400 
+                                        : (isDark ? Colors.grey.shade400 : Colors.grey.shade700),
+                                    size: 20,
+                                  ),
                           ),
                         ),
                       ),
