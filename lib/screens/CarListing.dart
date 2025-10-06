@@ -46,7 +46,6 @@
 //     );
 //   }
 // }
-
 import 'package:flutter/material.dart';
 import 'package:my_app/Classes/model/Vehicles.dart';
 import 'package:my_app/Classes/vehicle_service.dart';
@@ -172,16 +171,17 @@ class _ProductsPageState extends State<ProductsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final orientation = MediaQuery.of(context).orientation;
     final brands = _getBrands();
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
         children: [
           // Header Section
           Container(
-            color: Colors.white,
+            color: isDark ? Colors.grey.shade900 : Colors.white,
             padding: const EdgeInsets.all(20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -189,13 +189,13 @@ class _ProductsPageState extends State<ProductsPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       'All Cars',
                       style: TextStyle(
                         fontFamily: 'Poppins',
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF1A1A1A),
+                        color: isDark ? Colors.white : Color(0xFF1A1A1A),
                         letterSpacing: -0.5,
                       ),
                     ),
@@ -205,7 +205,7 @@ class _ProductsPageState extends State<ProductsPage> {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.blue.shade50,
+                        color: isDark ? Colors.blue.shade900.withOpacity(0.3) : Colors.blue.shade50,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
@@ -214,7 +214,7 @@ class _ProductsPageState extends State<ProductsPage> {
                           fontFamily: 'Poppins',
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: Colors.blue.shade700,
+                          color: isDark ? Colors.blue.shade300 : Colors.blue.shade700,
                         ),
                       ),
                     ),
@@ -260,18 +260,18 @@ class _ProductsPageState extends State<ProductsPage> {
                                   fontWeight: FontWeight.w600,
                                   color: isSelected
                                       ? Colors.white
-                                      : Colors.grey.shade700,
+                                      : (isDark ? Colors.grey.shade300 : Colors.grey.shade700),
                                 ),
                               ),
                             ],
                           ),
-                          backgroundColor: Colors.white,
+                          backgroundColor: isDark ? Colors.grey.shade800 : Colors.white,
                           selectedColor: Colors.blue.shade600,
                           checkmarkColor: Colors.white,
                           side: BorderSide(
                             color: isSelected
                                 ? Colors.blue.shade600
-                                : Colors.grey.shade300,
+                                : (isDark ? Colors.grey.shade600 : Colors.grey.shade300),
                             width: 1.5,
                           ),
                           padding: const EdgeInsets.symmetric(
@@ -302,10 +302,10 @@ class _ProductsPageState extends State<ProductsPage> {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
+                          color: isDark ? Colors.grey.shade800 : Colors.grey.shade100,
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
-                            color: Colors.grey.shade300,
+                            color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
                             width: 1,
                           ),
                         ),
@@ -314,14 +314,15 @@ class _ProductsPageState extends State<ProductsPage> {
                             value: sortBy,
                             icon: Icon(
                               Icons.keyboard_arrow_down,
-                              color: Colors.grey.shade700,
+                              color: isDark ? Colors.grey.shade400 : Colors.grey.shade700,
                             ),
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
-                              color: Colors.grey.shade800,
+                              color: isDark ? Colors.grey.shade300 : Colors.grey.shade800,
                             ),
+                            dropdownColor: isDark ? Colors.grey.shade800 : Colors.white,
                             items: const [
                               DropdownMenuItem(
                                 value: 'newest',
@@ -361,17 +362,17 @@ class _ProductsPageState extends State<ProductsPage> {
                     const SizedBox(width: 12),
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: isDark ? Colors.grey.shade800 : Colors.white,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
-                          color: Colors.grey.shade300,
+                          color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
                           width: 1,
                         ),
                       ),
                       child: IconButton(
                         icon: Icon(
                           Icons.tune,
-                          color: Colors.grey.shade700,
+                          color: isDark ? Colors.grey.shade400 : Colors.grey.shade700,
                         ),
                         onPressed: () {
                           _showAdvancedFilters();
@@ -400,7 +401,7 @@ class _ProductsPageState extends State<ProductsPage> {
                             Icon(
                               Icons.search_off,
                               size: 80,
-                              color: Colors.grey.shade400,
+                              color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
                             ),
                             const SizedBox(height: 16),
                             Text(
@@ -409,7 +410,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                 fontFamily: 'Poppins',
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
-                                color: Colors.grey.shade600,
+                                color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                               ),
                             ),
                             const SizedBox(height: 8),
@@ -418,7 +419,7 @@ class _ProductsPageState extends State<ProductsPage> {
                               style: TextStyle(
                                 fontFamily: 'Poppins',
                                 fontSize: 14,
-                                color: Colors.grey.shade500,
+                                color: isDark ? Colors.grey.shade500 : Colors.grey.shade500,
                               ),
                             ),
                           ],
@@ -500,9 +501,11 @@ class _AdvancedFilterSheetState extends State<AdvancedFilterSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration: BoxDecoration(
+        color: isDark ? Colors.grey.shade900 : Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       padding: const EdgeInsets.all(24),
@@ -513,12 +516,13 @@ class _AdvancedFilterSheetState extends State<AdvancedFilterSheet> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Advanced Filters',
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
+                  color: isDark ? Colors.white : Colors.black,
                 ),
               ),
               TextButton(
@@ -538,12 +542,13 @@ class _AdvancedFilterSheetState extends State<AdvancedFilterSheet> {
           const SizedBox(height: 24),
           
           // Price Range
-          const Text(
+          Text(
             'Price Range',
             style: TextStyle(
               fontFamily: 'Poppins',
               fontSize: 16,
               fontWeight: FontWeight.w600,
+              color: isDark ? Colors.white : Colors.black,
             ),
           ),
           RangeSlider(
@@ -565,12 +570,13 @@ class _AdvancedFilterSheetState extends State<AdvancedFilterSheet> {
           const SizedBox(height: 16),
           
           // Year Range
-          const Text(
+          Text(
             'Year Range',
             style: TextStyle(
               fontFamily: 'Poppins',
               fontSize: 16,
               fontWeight: FontWeight.w600,
+              color: isDark ? Colors.white : Colors.black,
             ),
           ),
           RangeSlider(
@@ -605,14 +611,6 @@ class _AdvancedFilterSheetState extends State<AdvancedFilterSheet> {
                 });
                 Navigator.pop(context);
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue.shade600,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
               child: const Text(
                 'Apply Filters',
                 style: TextStyle(

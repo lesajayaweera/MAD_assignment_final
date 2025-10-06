@@ -626,7 +626,6 @@
 //     );
 //   }
 // }
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -702,6 +701,8 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildSectionHeader(String title, {VoidCallback? onSeeAll}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
       child: Row(
@@ -709,11 +710,11 @@ class _HomeState extends State<Home> {
         children: [
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Poppins',
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF1A1A1A),
+              color: isDark ? Colors.white : Color(0xFF1A1A1A),
               letterSpacing: -0.5,
             ),
           ),
@@ -752,15 +753,17 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildEmptyState() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Container(
       height: 300,
       margin: const EdgeInsets.symmetric(horizontal: 20.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? Colors.grey.shade900 : Colors.white,
         borderRadius: BorderRadius.circular(16.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withOpacity(isDark ? 0.3 : 0.04),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -774,7 +777,7 @@ class _HomeState extends State<Home> {
             Icon(
               Icons.directions_car_outlined,
               size: 80,
-              color: Colors.grey.shade300,
+              color: isDark ? Colors.grey.shade600 : Colors.grey.shade300,
             ),
             const SizedBox(height: 16),
             Text(
@@ -783,7 +786,7 @@ class _HomeState extends State<Home> {
                 fontFamily: 'Poppins',
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
-                color: Colors.grey.shade700,
+                color: isDark ? Colors.grey.shade300 : Colors.grey.shade700,
               ),
             ),
             const SizedBox(height: 8),
@@ -792,7 +795,7 @@ class _HomeState extends State<Home> {
               style: TextStyle(
                 fontFamily: 'Poppins',
                 fontSize: 14,
-                color: Colors.grey.shade500,
+                color: isDark ? Colors.grey.shade400 : Colors.grey.shade500,
               ),
             ),
             const SizedBox(height: 24),
@@ -801,8 +804,6 @@ class _HomeState extends State<Home> {
               icon: const Icon(Icons.refresh),
               label: const Text('Refresh'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue.shade700,
-                foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 24,
                   vertical: 12,
@@ -830,8 +831,10 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
@@ -850,28 +853,31 @@ class _HomeState extends State<Home> {
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: isDark ? Colors.grey.shade900 : Colors.white,
                         borderRadius: BorderRadius.circular(14.0),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.04),
+                            color: Colors.black.withOpacity(isDark ? 0.3 : 0.04),
                             blurRadius: 10,
                             offset: const Offset(0, 2),
                           ),
                         ],
                       ),
                       child: TextField(
+                        style: TextStyle(
+                          color: isDark ? Colors.white : Colors.black,
+                        ),
                         decoration: InputDecoration(
                           hintText: 'Search for cars...',
                           hintStyle: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 15,
-                            color: Colors.grey.shade400,
+                            color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
                             fontWeight: FontWeight.w400,
                           ),
                           prefixIcon: Icon(
                             Icons.search,
-                            color: Colors.grey.shade600,
+                            color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
                             size: 22,
                           ),
                           border: InputBorder.none,
@@ -886,18 +892,21 @@ class _HomeState extends State<Home> {
                   const SizedBox(width: 12.0),
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: isDark ? Colors.grey.shade900 : Colors.white,
                       borderRadius: BorderRadius.circular(14.0),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.04),
+                          color: Colors.black.withOpacity(isDark ? 0.3 : 0.04),
                           blurRadius: 10,
                           offset: const Offset(0, 2),
                         ),
                       ],
                     ),
                     child: IconButton(
-                      icon: Icon(Icons.tune, color: Colors.grey.shade700),
+                      icon: Icon(
+                        Icons.tune,
+                        color: isDark ? Colors.grey.shade400 : Colors.grey.shade700,
+                      ),
                       onPressed: () {
                         // Handle filter action
                       },
