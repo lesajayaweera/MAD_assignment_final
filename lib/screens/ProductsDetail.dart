@@ -192,7 +192,6 @@
 //     );
 //   }
 // }
-
 import 'package:flutter/material.dart';
 import 'package:my_app/Classes/model/Vehicles.dart';
 import 'package:my_app/Classes/orderService.dart';
@@ -223,12 +222,17 @@ class _ProductDetailsState extends State<ProductDetails> {
     required String label,
     required String value,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? Colors.grey.shade900 : Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200, width: 1),
+        border: Border.all(
+          color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+          width: 1,
+        ),
       ),
       child: Column(
         children: [
@@ -239,18 +243,18 @@ class _ProductDetailsState extends State<ProductDetails> {
             style: TextStyle(
               fontFamily: 'Poppins',
               fontSize: 12,
-              color: Colors.grey.shade600,
+              color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
               fontWeight: FontWeight.w500,
             ),
           ),
           const SizedBox(height: 4),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Poppins',
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF1A1A1A),
+              color: isDark ? Colors.white : Color(0xFF1A1A1A),
             ),
             textAlign: TextAlign.center,
           ),
@@ -260,6 +264,8 @@ class _ProductDetailsState extends State<ProductDetails> {
   }
 
   Widget _buildRelatedVehicleCard(Vehicle vehicle) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -273,11 +279,11 @@ class _ProductDetailsState extends State<ProductDetails> {
         width: 200,
         margin: const EdgeInsets.only(right: 16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? Colors.grey.shade900 : Colors.white,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.06),
+              color: Colors.black.withOpacity(isDark ? 0.3 : 0.06),
               blurRadius: 10,
               offset: const Offset(0, 2),
             ),
@@ -304,11 +310,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                 children: [
                   Text(
                     "${vehicle.make} ${vehicle.model}",
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF1A1A1A),
+                      color: isDark ? Colors.white : Color(0xFF1A1A1A),
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -319,7 +325,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 12,
-                      color: Colors.grey.shade600,
+                      color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -343,11 +349,12 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     Orientation view = MediaQuery.of(context).orientation;
     final images = widget.product.imageUrls;
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: myAppbar(title: '${widget.product.make} ${widget.product.model}'),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -355,7 +362,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           children: [
             // Image Gallery Section
             Container(
-              color: Colors.white,
+              color: isDark ? Colors.grey.shade900 : Colors.white,
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
@@ -398,11 +405,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                           child: Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: isDark ? Colors.grey.shade800 : Colors.white,
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
+                                  color: Colors.black.withOpacity(isDark ? 0.3 : 0.1),
                                   blurRadius: 8,
                                   offset: const Offset(0, 2),
                                 ),
@@ -414,7 +421,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   : Icons.favorite_border,
                               color: isFavorite
                                   ? Colors.red
-                                  : Colors.grey.shade700,
+                                  : (isDark ? Colors.grey.shade400 : Colors.grey.shade700),
                               size: 24,
                             ),
                           ),
@@ -461,7 +468,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           decoration: BoxDecoration(
                             color: _currentImageIndex == index
                                 ? Colors.blue.shade600
-                                : Colors.grey.shade300,
+                                : (isDark ? Colors.grey.shade700 : Colors.grey.shade300),
                             borderRadius: BorderRadius.circular(4),
                           ),
                         ),
@@ -482,11 +489,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: isDark ? Colors.grey.shade900 : Colors.white,
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.04),
+                          color: Colors.black.withOpacity(isDark ? 0.3 : 0.04),
                           blurRadius: 10,
                           offset: const Offset(0, 2),
                         ),
@@ -505,11 +512,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 children: [
                                   Text(
                                     "${widget.product.make} ${widget.product.model}",
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontFamily: 'Poppins',
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold,
-                                      color: Color(0xFF1A1A1A),
+                                      color: isDark ? Colors.white : Color(0xFF1A1A1A),
                                       letterSpacing: -0.5,
                                     ),
                                   ),
@@ -523,9 +530,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                         ),
                                         decoration: BoxDecoration(
                                           color: Colors.blue.shade50,
-                                          borderRadius: BorderRadius.circular(
-                                            6,
-                                          ),
+                                          borderRadius: BorderRadius.circular(6),
                                         ),
                                         child: Text(
                                           widget.product.year.toString(),
@@ -545,9 +550,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                         ),
                                         decoration: BoxDecoration(
                                           color: Colors.orange.shade50,
-                                          borderRadius: BorderRadius.circular(
-                                            6,
-                                          ),
+                                          borderRadius: BorderRadius.circular(6),
                                         ),
                                         child: Text(
                                           widget.product.condition,
@@ -612,7 +615,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   style: TextStyle(
                                     fontFamily: 'Poppins',
                                     fontSize: 14,
-                                    color: Colors.grey.shade600,
+                                    color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -673,11 +676,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: isDark ? Colors.grey.shade900 : Colors.white,
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.04),
+                          color: Colors.black.withOpacity(isDark ? 0.3 : 0.04),
                           blurRadius: 10,
                           offset: const Offset(0, 2),
                         ),
@@ -696,23 +699,23 @@ class _ProductDetailsState extends State<ProductDetails> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
+                              Text(
                                 'Seller',
                                 style: TextStyle(
                                   fontFamily: 'Poppins',
                                   fontSize: 12,
-                                  color: Colors.grey,
+                                  color: isDark ? Colors.grey.shade400 : Colors.grey,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
                               const SizedBox(height: 4),
                               Text(
                                 widget.product.user?.name ?? 'Unknown',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontFamily: 'Poppins',
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF1A1A1A),
+                                  color: isDark ? Colors.white : Color(0xFF1A1A1A),
                                 ),
                               ),
                             ],
@@ -738,11 +741,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                     padding: const EdgeInsets.all(20),
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: isDark ? Colors.grey.shade900 : Colors.white,
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.04),
+                          color: Colors.black.withOpacity(isDark ? 0.3 : 0.04),
                           blurRadius: 10,
                           offset: const Offset(0, 2),
                         ),
@@ -751,13 +754,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           'Description',
                           style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF1A1A1A),
+                            color: isDark ? Colors.white : Color(0xFF1A1A1A),
                           ),
                         ),
                         const SizedBox(height: 12),
@@ -767,7 +770,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                             fontFamily: 'Poppins',
                             fontSize: 14,
                             height: 1.6,
-                            color: Colors.grey.shade700,
+                            color: isDark ? Colors.grey.shade400 : Colors.grey.shade700,
                           ),
                         ),
                       ],
@@ -777,13 +780,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                   const SizedBox(height: 20),
 
                   // Specifications Section
-                  const Text(
+                  Text(
                     'Specifications',
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF1A1A1A),
+                      color: isDark ? Colors.white : Color(0xFF1A1A1A),
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -852,11 +855,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: isDark ? Colors.grey.shade900 : Colors.white,
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.04),
+                          color: Colors.black.withOpacity(isDark ? 0.3 : 0.04),
                           blurRadius: 10,
                           offset: const Offset(0, 2),
                         ),
@@ -873,13 +876,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                               size: 24,
                             ),
                             const SizedBox(width: 8),
-                            const Text(
+                            Text(
                               'Location',
                               style: TextStyle(
                                 fontFamily: 'Poppins',
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF1A1A1A),
+                                color: isDark ? Colors.white : Color(0xFF1A1A1A),
                               ),
                             ),
                           ],
@@ -890,60 +893,16 @@ class _ProductDetailsState extends State<ProductDetails> {
                           style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 14,
-                            color: Colors.grey.shade700,
+                            color: isDark ? Colors.grey.shade400 : Colors.grey.shade700,
                           ),
                         ),
                         const SizedBox(height: 12),
-                        SizedBox(
-                          width: double.infinity,
-                          child: OutlinedButton.icon(
-                            onPressed: () {
-                              // Open map
-                            },
-                            icon: const Icon(Icons.map),
-                            label: const Text('View on Map'),
-                            style: OutlinedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              side: BorderSide(color: Colors.blue.shade600),
-                              foregroundColor: Colors.blue.shade600,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                          ),
-                        ),
+                        
                       ],
                     ),
                   ),
 
                   const SizedBox(height: 24),
-
-                  // // Related Vehicles
-                  // if (widget.relatedVehicles.isNotEmpty) ...[
-                  //   const Text(
-                  //     'Similar Vehicles',
-                  //     style: TextStyle(
-                  //       fontFamily: 'Poppins',
-                  //       fontSize: 18,
-                  //       fontWeight: FontWeight.bold,
-                  //       color: Color(0xFF1A1A1A),
-                  //     ),
-                  //   ),
-                  //   const SizedBox(height: 12),
-                  //   SizedBox(
-                  //     height: 220,
-                  //     child: ListView.builder(
-                  //       scrollDirection: Axis.horizontal,
-                  //       itemCount: widget.relatedVehicles.length,
-                  //       itemBuilder: (context, index) {
-                  //         return _buildRelatedVehicleCard(
-                  //           widget.relatedVehicles[index],
-                  //         );
-                  //       },
-                  //     ),
-                  //   ),
-                  //   const SizedBox(height: 24),
-                  // ],
 
                   // Add to Cart Button
                   SizedBox(
@@ -951,7 +910,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                     child: ElevatedButton(
                       onPressed: () {
                         if (!cart.contains(widget.product)) {
-                          // AddtoCart(widget.product);
                            OrderService.createOrder(widget.product.uuid);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -981,6 +939,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                               duration: const Duration(seconds: 2),
                             ),
                           );
+                          Navigator.pop(context);
+
+                        
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -1011,16 +972,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                           );
                         }
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue.shade600,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 18),
-                        elevation: 2,
-                        shadowColor: Colors.blue.shade600.withOpacity(0.4),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                      ),
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -1038,8 +989,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                       ),
                     ),
                   ),
-
-                  
 
                   const SizedBox(height: 20),
                 ],

@@ -17,6 +17,8 @@ class _ProductContainerState extends State<ProductContainer> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return GestureDetector(
       onTap: () {
        Navigator.push(context, MaterialPageRoute(builder: (context)=> ProductDetails(product: widget.product) ));
@@ -29,7 +31,8 @@ class _ProductContainerState extends State<ProductContainer> {
           transform: Matrix4.translationValues(0, _isHovered ? -8 : 0, 0),
           child: Card(
             elevation: _isHovered ? 12 : 4,
-            shadowColor: Colors.black.withOpacity(0.2),
+            shadowColor: Colors.black.withOpacity(isDark ? 0.5 : 0.2),
+            color: isDark ? Colors.grey.shade900 : Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
@@ -41,7 +44,9 @@ class _ProductContainerState extends State<ProductContainer> {
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [Colors.white, Colors.grey.shade50],
+                  colors: isDark 
+                      ? [Colors.grey.shade900, Colors.grey.shade800]
+                      : [Colors.white, Colors.grey.shade50],
                 ),
               ),
               child: Column(
@@ -66,11 +71,11 @@ class _ProductContainerState extends State<ProductContainer> {
                                   print(stackTrace);
                                   return Container(
                                     height: 180,
-                                    color: Colors.grey.shade200,
+                                    color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
                                     child: Icon(
                                       Icons.directions_car,
                                       size: 64,
-                                      color: Colors.grey.shade400,
+                                      color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
                                     ),
                                   );
                                 },
@@ -79,7 +84,7 @@ class _ProductContainerState extends State<ProductContainer> {
                                       if (loadingProgress == null) return child;
                                       return Container(
                                         height: 180,
-                                        color: Colors.grey.shade200,
+                                        color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
                                         child: Center(
                                           child: CircularProgressIndicator(
                                             value:
@@ -98,11 +103,11 @@ class _ProductContainerState extends State<ProductContainer> {
                               )
                             : Container(
                                 height: 180,
-                                color: Colors.grey.shade200,
+                                color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
                                 child: Icon(
                                   Icons.directions_car,
                                   size: 64,
-                                  color: Colors.grey.shade400,
+                                  color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
                                 ),
                               ),
                       ),
@@ -132,11 +137,13 @@ class _ProductContainerState extends State<ProductContainer> {
                         child: Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.9),
+                            color: isDark 
+                                ? Colors.grey.shade800.withOpacity(0.9)
+                                : Colors.white.withOpacity(0.9),
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
+                                color: Colors.black.withOpacity(isDark ? 0.3 : 0.1),
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
                               ),
@@ -144,7 +151,7 @@ class _ProductContainerState extends State<ProductContainer> {
                           ),
                           child: Icon(
                             Icons.favorite_border,
-                            color: Colors.grey.shade700,
+                            color: isDark ? Colors.grey.shade400 : Colors.grey.shade700,
                             size: 20,
                           ),
                         ),
@@ -161,11 +168,11 @@ class _ProductContainerState extends State<ProductContainer> {
                         // Vehicle Make
                         Text(
                           widget.product.make,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF2D3436),
+                            color: isDark ? Colors.white : Color(0xFF2D3436),
                             letterSpacing: -0.5,
                           ),
                           maxLines: 1,
@@ -179,7 +186,7 @@ class _ProductContainerState extends State<ProductContainer> {
                             Icon(
                               Icons.label_outline,
                               size: 14,
-                              color: Colors.grey.shade600,
+                              color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
                             ),
                             const SizedBox(width: 4),
                             Expanded(
@@ -189,7 +196,7 @@ class _ProductContainerState extends State<ProductContainer> {
                                   fontFamily: 'Poppins',
                                   fontSize: 13,
                                   fontWeight: FontWeight.w500,
-                                  color: Colors.grey.shade600,
+                                  color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -200,7 +207,10 @@ class _ProductContainerState extends State<ProductContainer> {
                         const SizedBox(height: 12),
 
                         // Divider
-                        Divider(color: Colors.grey.shade200, height: 1),
+                        Divider(
+                          color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+                          height: 1,
+                        ),
                         const SizedBox(height: 12),
 
                         // Price and Button Row
@@ -216,7 +226,7 @@ class _ProductContainerState extends State<ProductContainer> {
                                   style: TextStyle(
                                     fontFamily: 'Poppins',
                                     fontSize: 11,
-                                    color: Colors.grey.shade600,
+                                    color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
