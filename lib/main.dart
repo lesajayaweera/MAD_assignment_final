@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       darkTheme: customDarkTheme,
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
-      home: const AuthWrapper(), // 👈 use wrapper
+      home: const AuthWrapper(), 
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/Classes/apiService.dart';
 import 'package:my_app/Classes/model/ShakeService.dart';
-
 import 'package:my_app/components/common/myappBar.dart';
 import 'package:my_app/components/common/mydrawer.dart';
 import 'package:my_app/screens/CarListing.dart';

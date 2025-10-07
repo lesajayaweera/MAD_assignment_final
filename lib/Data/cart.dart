@@ -1,20 +1,21 @@
-import 'package:my_app/Data/items.dart';
+import 'package:my_app/Classes/model/Orders.dart';
 
-List<Products> cart =[];
 
-void AddtoCart(Products product){
+List<Vehicle> cart =[];
+
+void AddtoCart(Vehicle product){
   if(!cart.contains(product)){
     cart.add(product);
   }
 }
-void RemoveProduct (Products product){
+void RemoveProduct (Vehicle product){
   cart.remove(product);
 }
 
 double GetTotal(){
   double total = 0.0;
   for (var item in cart) {
-    total += item.price;
+    total += double.parse(item.price);
   }
   return total;
 }

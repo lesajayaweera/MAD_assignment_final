@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:sensors_plus/sensors_plus.dart';
 
 class ShakeDetector {
-  static const double shakeThreshold = 15.0; // Adjust sensitivity
-  static const int shakeDuration = 200; // milliseconds
+  static const double shakeThreshold = 15.0; 
+  static const int shakeDuration = 200; 
   
   DateTime? _lastShakeTime;
   StreamSubscription<AccelerometerEvent>? _subscription;

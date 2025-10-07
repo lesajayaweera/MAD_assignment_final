@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/Classes/model/Vehicles.dart';
-
-import 'package:my_app/Data/items.dart';
 import 'package:my_app/Essentials/functions.dart';
 
 class CartItem extends StatefulWidget {
