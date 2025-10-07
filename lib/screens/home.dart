@@ -14,10 +14,13 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
   late final Timer _timer;
 
   List<Vehicle> _vehicles = [];
+  List<Vehicle> _filteredVehicles = [];
   bool _isLoading = true;
+  String _searchQuery = '';
 
   @override
   void initState() {
@@ -26,7 +29,7 @@ class _HomeState extends State<Home> {
     _fetchVehicle();
 
     _timer = Timer.periodic(Duration(seconds: 6), (timer) {
-      if (_scrollController.hasClients && _vehicles.isNotEmpty) {
+      if (_scrollController.hasClients && _filteredVehicles.isNotEmpty) {
         double nextPosition = _scrollController.offset + 300;
         if (nextPosition >= _scrollController.position.maxScrollExtent) {
           _scrollController.animateTo(
@@ -43,6 +46,9 @@ class _HomeState extends State<Home> {
         }
       }
     });
+
+    // Listen to search input changes
+    _searchController.addListener(_onSearchChanged);
   }
 
   Future<void> _fetchVehicle() async {
@@ -52,6 +58,7 @@ class _HomeState extends State<Home> {
         _vehicles = response
             .map<Vehicle>((json) => Vehicle.fromJson(json))
             .toList();
+        _filteredVehicles = _vehicles;
         print(_vehicles);
         _isLoading = false;
       });
@@ -63,6 +70,47 @@ class _HomeState extends State<Home> {
     }
   }
 
+  void _onSearchChanged() {
+    setState(() {
+      _searchQuery = _searchController.text.toLowerCase();
+      if (_searchQuery.isEmpty) {
+        _filteredVehicles = _vehicles;
+      } else {
+        _filteredVehicles = _vehicles.where((vehicle) {
+          // Search by make, model, year, or any other relevant fields
+          final make = vehicle.make?.toLowerCase() ?? '';
+          final model = vehicle.model?.toLowerCase() ?? '';
+          final year = vehicle.year?.toString() ?? '';
+          
+          
+          return make.contains(_searchQuery) ||
+                 model.contains(_searchQuery) ||
+                 year.contains(_searchQuery);
+                 
+        }).toList();
+      }
+    });
+  }
+
+  List<Vehicle> _getLatestVehicles() {
+    // Create a copy and sort by createdAt or year (assuming newer first)
+    List<Vehicle> latestVehicles = List.from(_filteredVehicles);
+    
+    latestVehicles.sort((a, b) {
+      // First try to sort by createdAt if available
+      if (a.createdAt != null && b.createdAt != null) {
+        return b.createdAt!.compareTo(a.createdAt!);
+      }
+      // Fallback to year if createdAt is not available
+      if (a.year != null && b.year != null) {
+        return b.year!.compareTo(a.year!);
+      }
+      return 0;
+    });
+    
+    return latestVehicles;
+  }
+
   // Pull-to-refresh handler
   Future<void> _handleRefresh() async {
     setState(() {
@@ -71,10 +119,19 @@ class _HomeState extends State<Home> {
     await _fetchVehicle();
   }
 
+  void _clearSearch() {
+    _searchController.clear();
+    setState(() {
+      _searchQuery = '';
+      _filteredVehicles = _vehicles;
+    });
+  }
+
   @override
   void dispose() {
     _timer.cancel();
     _scrollController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -132,6 +189,7 @@ class _HomeState extends State<Home> {
 
   Widget _buildEmptyState() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isSearching = _searchQuery.isNotEmpty;
 
     return Container(
       height: 300,
@@ -153,13 +211,13 @@ class _HomeState extends State<Home> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.directions_car_outlined,
+              isSearching ? Icons.search_off : Icons.directions_car_outlined,
               size: 80,
               color: isDark ? Colors.grey.shade600 : Colors.grey.shade300,
             ),
             const SizedBox(height: 16),
             Text(
-              'No Cars Available',
+              isSearching ? 'No Results Found' : 'No Cars Available',
               style: TextStyle(
                 fontFamily: 'Poppins',
                 fontSize: 20,
@@ -169,7 +227,9 @@ class _HomeState extends State<Home> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Check back later for new listings',
+              isSearching
+                  ? 'Try different keywords'
+                  : 'Check back later for new listings',
               style: TextStyle(
                 fontFamily: 'Poppins',
                 fontSize: 14,
@@ -178,9 +238,9 @@ class _HomeState extends State<Home> {
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
-              onPressed: _handleRefresh,
-              icon: const Icon(Icons.refresh),
-              label: const Text('Refresh'),
+              onPressed: isSearching ? _clearSearch : _handleRefresh,
+              icon: Icon(isSearching ? Icons.clear : Icons.refresh),
+              label: Text(isSearching ? 'Clear Search' : 'Refresh'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 24,
@@ -210,6 +270,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final latestVehicles = _getLatestVehicles();
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -250,6 +311,7 @@ class _HomeState extends State<Home> {
                           ],
                         ),
                         child: TextField(
+                          controller: _searchController,
                           style: TextStyle(
                             color: isDark ? Colors.white : Colors.black,
                           ),
@@ -270,6 +332,18 @@ class _HomeState extends State<Home> {
                                   : Colors.grey.shade600,
                               size: 22,
                             ),
+                            suffixIcon: _searchQuery.isNotEmpty
+                                ? IconButton(
+                                    icon: Icon(
+                                      Icons.clear,
+                                      color: isDark
+                                          ? Colors.grey.shade500
+                                          : Colors.grey.shade600,
+                                      size: 20,
+                                    ),
+                                    onPressed: _clearSearch,
+                                  )
+                                : null,
                             border: InputBorder.none,
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 16,
@@ -315,7 +389,7 @@ class _HomeState extends State<Home> {
               // Show loading, empty state, or content
               _isLoading
                   ? _buildLoadingState()
-                  : _vehicles.isEmpty
+                  : _filteredVehicles.isEmpty
                   ? _buildEmptyState()
                   : Column(
                       children: [
@@ -324,7 +398,7 @@ class _HomeState extends State<Home> {
                         SizedBox(
                           height: 180,
                           child: ListView.builder(
-                            itemCount: _vehicles.length,
+                            itemCount: _filteredVehicles.length,
                             physics: const BouncingScrollPhysics(),
                             controller: _scrollController,
                             scrollDirection: Axis.horizontal,
@@ -333,7 +407,7 @@ class _HomeState extends State<Home> {
                               right: 20.0,
                             ),
                             itemBuilder: (context, index) {
-                              final car = _vehicles[index];
+                              final car = _filteredVehicles[index];
                               return Padding(
                                 padding: const EdgeInsets.only(right: 16.0),
                                 child: featuredItem(product: car),
@@ -344,7 +418,7 @@ class _HomeState extends State<Home> {
 
                         const SizedBox(height: 24),
 
-                        // Latest Cars section
+                        // Latest Cars section (sorted by date/year)
                         _buildSectionHeader(
                           'Latest Cars',
                           onSeeAll: () {
@@ -354,7 +428,7 @@ class _HomeState extends State<Home> {
                         SizedBox(
                           height: 400,
                           child: ListView.builder(
-                            itemCount: _vehicles.length,
+                            itemCount: latestVehicles.length,
                             scrollDirection: Axis.horizontal,
                             physics: const BouncingScrollPhysics(),
                             padding: const EdgeInsets.only(
@@ -362,7 +436,7 @@ class _HomeState extends State<Home> {
                               right: 20.0,
                             ),
                             itemBuilder: (context, index) {
-                              final item = _vehicles[index];
+                              final item = latestVehicles[index];
                               return Padding(
                                 padding: const EdgeInsets.only(right: 16.0),
                                 child: ProductContainer(product: item),
@@ -383,7 +457,7 @@ class _HomeState extends State<Home> {
                         SizedBox(
                           height: 400,
                           child: ListView.builder(
-                            itemCount: _vehicles.length,
+                            itemCount: _filteredVehicles.length,
                             scrollDirection: Axis.horizontal,
                             physics: const BouncingScrollPhysics(),
                             padding: const EdgeInsets.only(
@@ -391,7 +465,7 @@ class _HomeState extends State<Home> {
                               right: 20.0,
                             ),
                             itemBuilder: (context, index) {
-                              final items = _vehicles[index];
+                              final items = _filteredVehicles[index];
                               return Padding(
                                 padding: const EdgeInsets.only(right: 16.0),
                                 child: ProductContainer(product: items),

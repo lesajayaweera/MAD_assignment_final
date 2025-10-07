@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/screens/myAccount.dart';
 
 class myDrawer extends StatelessWidget {
   final Function(int) onItemTap; // New callback
@@ -54,6 +55,16 @@ class myDrawer extends StatelessWidget {
             onTap: () {
               onItemTap(3);
               Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.person),
+            title: const Text('My Account'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfilePage()),
+              );
             },
           ),
         ],
